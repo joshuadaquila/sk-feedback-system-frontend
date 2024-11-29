@@ -4,7 +4,7 @@ import { Box, TextField, Button, Typography, Grid, Link, Alert } from '@mui/mate
 import axios from 'axios'; 
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null); 
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Login = () => {
 
     try {
       
-      const response = await axios.post('http://localhost:5000/api/login', { username, password });
+      const response = await axios.post('http://localhost:3001/user/login', { userName, password });
       const { role, token } = response.data;
 
       
@@ -67,7 +67,7 @@ const Login = () => {
             letterSpacing: 1,
           }}
         >
-          SK Event Feedbacking System
+          SK Event Feedbacking
         </Typography>
 
         <Typography variant="body1" sx={{ marginBottom: 3, color: '#666' }}>
@@ -82,9 +82,9 @@ const Login = () => {
 
         <form onSubmit={handleLogin}>
           <TextField
-            label="Username"
+            label="UserName"
             fullWidth
-            value={username}
+            value={userName}
             onChange={(e) => setUsername(e.target.value)}
             sx={{
               marginBottom: 2,

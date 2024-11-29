@@ -1,19 +1,54 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Grid, Link, Alert } from '@mui/material';
-import axios from 'axios'; 
+import { useNavigate } from 'react-router-dom';
+import { Box, TextField, Button, Typography, Grid, Link, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import axios from 'axios';
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState(null); 
-  const [success, setSuccess] = useState(null); 
+  const [formData, setFormData] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    extensionName: '',
+    birthday: '',
+    purok: '',
+    civilStatus: '',
+    educationBackgroundId: '',
+    userName: '',
+    userType: '',
+    password: '',
+    confirmPassword: ''
+  });
+  
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    const {
+      password,
+      confirmPassword,
+      userName,
+      firstName,
+      middleName,
+      lastName,
+      extensionName,
+      birthday,
+      purok,
+      civilStatus,
+      educationBackgroundId,
+      userType
+    } = formData;
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
@@ -21,23 +56,47 @@ const Register = () => {
     }
 
     try {
+      const response = await axios.post('http://localhost:3001/user/createAccount', {
+        userName,
+        firstName,
+        middleName,
+        lastName,
+        extensionName,
+        birthday,
+        purok,
+        civilStatus,
+        educationBackgroundId,
+        userType,
+        password
+      });
       
-      await axios.post('http://localhost:5000/api/register', { username, email, password });
       setSuccess('Registration successful! You can now log in.');
-      setUsername('');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
+      setFormData({
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        extensionName: '',
+        birthday: '',
+        purok: '',
+        civilStatus: '',
+        educationBackgroundId: '',
+        userName: '',
+        userType: '',
+        password: '',
+        confirmPassword: ''
+      });
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     }
   };
 
+  console.log(formData);
+
   return (
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
         padding: 5,
@@ -48,8 +107,8 @@ const Register = () => {
       <Box
         sx={{
           width: '100%',
-          maxWidth: 400,
-          padding: 4,
+          maxWidth: 500,  
+          padding: 3,  
           textAlign: 'center',
           backgroundColor: '#ffffff',
           borderRadius: 2,
@@ -57,83 +116,173 @@ const Register = () => {
         }}
       >
         <Typography
-          variant="h4"
+          variant="h6"  
           sx={{
-            marginBottom: 3,
+            marginBottom: 2,
             color: '#333',
             fontWeight: 'bold',
             letterSpacing: 1,
+            fontSize: '1 rem' 
           }}
         >
           Create Account
         </Typography>
 
-        <Typography variant="body1" sx={{ marginBottom: 3, color: '#666' }}>
+        <Typography variant="body2" sx={{ marginBottom: 3, color: '#666', fontSize: '0.875rem' }}>
           Fill in the details to register
         </Typography>
 
         {error && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>
+          <Alert severity="error" sx={{ marginBottom: 2, fontSize: '0.875rem' }}>
             {error}
           </Alert>
         )}
         {success && (
-          <Alert severity="success" sx={{ marginBottom: 2 }}>
+          <Alert severity="success" sx={{ marginBottom: 2, fontSize: '0.875rem' }}>
             {success}
           </Alert>
         )}
 
         <form onSubmit={handleRegister}>
-          <TextField
-            label="Username"
-            fullWidth
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            sx={{
-              marginBottom: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-              },
-            }}
-          />
-          <TextField
-            label="Email"
-            fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            sx={{
-              marginBottom: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-              },
-            }}
-          />
-          <TextField
-            type="password"
-            label="Password"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{
-              marginBottom: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-              },
-            }}
-          />
-          <TextField
-            type="password"
-            label="Confirm Password"
-            fullWidth
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            sx={{
-              marginBottom: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-              },
-            }}
-          />
+          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="First Name"
+                fullWidth
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Last Name"
+                fullWidth
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Middle Name"
+                fullWidth
+                name="middleName"
+                value={formData.middleName}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Extension Name (optional)"
+                fullWidth
+                name="extensionName"
+                value={formData.extensionName}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                type="date"
+                label="Birthday"
+                fullWidth
+                name="birthday"
+                value={formData.birthday}
+                onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Purok"
+                fullWidth
+                name="purok"
+                value={formData.purok}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Civil Status"
+                fullWidth
+                name="civilStatus"
+                value={formData.civilStatus}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Education Background ID"
+                fullWidth
+                name="educationBackgroundId"
+                value={formData.educationBackgroundId}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
+            <Grid item xs={12}>
+              <TextField
+                label="UserName"
+                fullWidth
+                name="userName"
+                value={formData.userName}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel sx={{ fontSize: '0.875rem' }}>User Type</InputLabel>
+                <Select
+                  label="User Type"
+                  name="userType"
+                  value={formData.userType}
+                  onChange={handleChange}
+                  sx={{ fontSize: '0.875rem' }} 
+                >
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="user">User</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                type="password"
+                label="Password"
+                fullWidth
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                type="password"
+                label="Confirm Password"
+                fullWidth
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                sx={{ fontSize: '0.875rem' }} 
+              />
+            </Grid>
+          </Grid>
 
           <Button
             type="submit"
@@ -149,6 +298,7 @@ const Register = () => {
                 backgroundColor: '#003d75',
               },
               borderRadius: '8px',
+              fontSize: '0.875rem' 
             }}
           >
             Register
@@ -157,7 +307,7 @@ const Register = () => {
 
         <Grid container justifyContent="center" sx={{ marginTop: 3 }}>
           <Grid item>
-            <Typography variant="body2" sx={{ color: '#666' }}>
+            <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
               Already have an account?{' '}
               <Link
                 href="/login"
