@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, Typography, Grid, Link, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import axios from 'axios';
 
 const Register = () => {
@@ -12,13 +11,14 @@ const Register = () => {
     birthday: '',
     purok: '',
     civilStatus: '',
-    educationBackgroundId: '',
+    educationBackground: '',  // Updated field name
     userName: '',
     userType: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    status: '', // New field for status
   });
-  
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -26,7 +26,7 @@ const Register = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -46,10 +46,29 @@ const Register = () => {
       birthday,
       purok,
       civilStatus,
-      educationBackgroundId,
-      userType
+      educationBackground,
+      userType,
     } = formData;
 
+    
+    if (
+      !firstName ||
+      !middleName ||
+      !lastName ||
+      !birthday ||
+      !purok ||
+      !civilStatus ||
+      !educationBackground ||
+      !userName ||
+      !userType ||
+      !password ||
+      !confirmPassword
+    ) {
+      setError('Please fill in all the required fields.');
+      return;
+    }
+
+    
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -65,11 +84,11 @@ const Register = () => {
         birthday,
         purok,
         civilStatus,
-        educationBackgroundId,
+        educationBackground,
         userType,
-        password
+        password,
       });
-      
+
       setSuccess('Registration successful! You can now log in.');
       setFormData({
         firstName: '',
@@ -79,251 +98,162 @@ const Register = () => {
         birthday: '',
         purok: '',
         civilStatus: '',
-        educationBackgroundId: '',
+        educationBackground: '', 
         userName: '',
         userType: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        
       });
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     }
   };
 
-  console.log(formData);
-
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        padding: 5,
-        background: 'linear-gradient(135deg, #000428 0%, #004e92 100%)',
-        color: '#fff',
-      }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          maxWidth: 500,  
-          padding: 3,  
-          textAlign: 'center',
-          backgroundColor: '#ffffff',
-          borderRadius: 2,
-          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
-        }}
-      >
-        <Typography
-          variant="h6"  
-          sx={{
-            marginBottom: 2,
-            color: '#333',
-            fontWeight: 'bold',
-            letterSpacing: 1,
-            fontSize: '1 rem' 
-          }}
-        >
-          Create Account
-        </Typography>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-800 to-blue-500 p-6">
+      <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Create Account</h2>
+        <p className="text-center text-gray-600 mb-6">Fill in the details to register</p>
 
-        <Typography variant="body2" sx={{ marginBottom: 3, color: '#666', fontSize: '0.875rem' }}>
-          Fill in the details to register
-        </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ marginBottom: 2, fontSize: '0.875rem' }}>
-            {error}
-          </Alert>
-        )}
-        {success && (
-          <Alert severity="success" sx={{ marginBottom: 2, fontSize: '0.875rem' }}>
-            {success}
-          </Alert>
-        )}
+        {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
+        {success && <div className="bg-green-100 text-green-700 p-3 rounded mb-4">{success}</div>}
 
         <form onSubmit={handleRegister}>
-          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="First Name"
-                fullWidth
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Last Name"
-                fullWidth
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Middle Name"
-                fullWidth
-                name="middleName"
-                value={formData.middleName}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Extension Name (optional)"
-                fullWidth
-                name="extensionName"
-                value={formData.extensionName}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-          </Grid>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="First Name"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Last Name"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="middleName"
+              value={formData.middleName}
+              onChange={handleChange}
+              placeholder="Middle Name"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="extensionName"
+              value={formData.extensionName}
+              onChange={handleChange}
+              placeholder="Extension Name (optional)"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+          </div>
 
-          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                type="date"
-                label="Birthday"
-                fullWidth
-                name="birthday"
-                value={formData.birthday}
-                onChange={handleChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Purok"
-                fullWidth
-                name="purok"
-                value={formData.purok}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Civil Status"
-                fullWidth
-                name="civilStatus"
-                value={formData.civilStatus}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Education Background ID"
-                fullWidth
-                name="educationBackgroundId"
-                value={formData.educationBackgroundId}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-          </Grid>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <input
+              type="date"
+              name="birthday"
+              value={formData.birthday}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="purok"
+              value={formData.purok}
+              onChange={handleChange}
+              placeholder="Purok"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="civilStatus"
+              value={formData.civilStatus}
+              onChange={handleChange}
+              placeholder="Civil Status"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <select
+              name="educationBackground"
+              value={formData.educationBackground}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            >
+              <option value="">Select Education Background</option>
+              <option value="High School Level">High School Level</option>
+              <option value="High School Graduate">High School Graduate</option>
+              <option value="Elementary Level">Elementary Level</option>
+              <option value="Elementary Graduate">Elementary Graduate</option>
+              <option value="College Level">College Level</option>
+              <option value="College Graduate">College Graduate</option>
+            </select>
+          </div>
 
-          <Grid container spacing={1} sx={{ marginBottom: 2 }}>
-            <Grid item xs={12}>
-              <TextField
-                label="UserName"
-                fullWidth
-                name="userName"
-                value={formData.userName}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel sx={{ fontSize: '0.875rem' }}>User Type</InputLabel>
-                <Select
-                  label="User Type"
-                  name="userType"
-                  value={formData.userType}
-                  onChange={handleChange}
-                  sx={{ fontSize: '0.875rem' }} 
-                >
-                  <MenuItem value="admin">Admin</MenuItem>
-                  <MenuItem value="user">User</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                type="password"
-                label="Password"
-                fullWidth
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                type="password"
-                label="Confirm Password"
-                fullWidth
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                sx={{ fontSize: '0.875rem' }} 
-              />
-            </Grid>
-          </Grid>
+          <div className="mb-4">
+            <input
+              type="text"
+              name="userName"
+              value={formData.userName}
+              onChange={handleChange}
+              placeholder="Username"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+          </div>
 
-          <Button
+          <div className="mb-4">
+            <select
+              name="userType"
+              value={formData.userType}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            >
+              <option value="">Select User Type</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm Password"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+          </div>
+
+          <button
             type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{
-              paddingY: 1.5,
-              fontWeight: 'bold',
-              letterSpacing: 1,
-              backgroundColor: '#004e92',
-              '&:hover': {
-                backgroundColor: '#003d75',
-              },
-              borderRadius: '8px',
-              fontSize: '0.875rem' 
-            }}
+            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
           >
             Register
-          </Button>
+          </button>
         </form>
 
-        <Grid container justifyContent="center" sx={{ marginTop: 3 }}>
-          <Grid item>
-            <Typography variant="body2" sx={{ color: '#666', fontSize: '0.75rem' }}>
-              Already have an account?{' '}
-              <Link
-                href="/login"
-                sx={{
-                  textDecoration: 'none',
-                  color: '#004e92',
-                  fontWeight: 'bold',
-                }}
-              >
-                Login
-              </Link>
-            </Typography>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
+        <p className="text-center text-gray-600 mt-4">
+          Already have an account?{' '}
+          <a href="/login" className="text-blue-600 font-medium hover:underline">
+            Login
+          </a>
+        </p>
+      </div>
+    </div>
   );
 };
 

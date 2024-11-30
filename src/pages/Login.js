@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, Typography, Grid, Link, Alert } from '@mui/material';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const Login = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(null); 
+    setError(null);
+
+    if (!userName || !password) {
+      setError('Both username and password are required.');
+      return;
+    }
 
     try {
-      
-      const response = await axios.post('http://localhost:3001/user/login', { userName, password });
+      const response = await axios.post('http://localhost:3001/user/login', {
+        userName,
+        password,
+      });
       const { role, token } = response.data;
 
-      
       localStorage.setItem('authToken', token);
 
-     
       if (role === 'admin') {
         navigate('/admin/dashboard');
       } else if (role === 'user') {
@@ -30,122 +34,71 @@ const Login = () => {
         setError('Invalid role. Please contact support.');
       }
     } catch (err) {
-      
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        minHeight: '100vh',
-        padding: 5,
-        background: 'linear-gradient(135deg, #000428 0%, #004e92 100%)',
-        color: '#fff',
-      }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          maxWidth: 400,
-          padding: 4,
-          textAlign: 'center',
-          backgroundColor: '#ffffff',
-          borderRadius: 2,
-          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
-        }}
-      >
-        <Typography
-          variant="h5"
-          sx={{
-            marginBottom: 3,
-            color: '#333',
-            fontWeight: 'bold',
-            letterSpacing: 1,
-          }}
-        >
-          SK Event Feedbacking
-        </Typography>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-700 to-blue-400 p-5">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-md w-full">
+        <div className="p-6">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">SK Event System</h2>
+          <p className="text-center text-gray-600 mb-6">Log in to access your account</p>
 
-        <Typography variant="body1" sx={{ marginBottom: 3, color: '#666' }}>
-          Please login to continue
-        </Typography>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
-        {error && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>
-            {error}
-          </Alert>
-        )}
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <label htmlFor="username" className="block text-gray-700 font-medium mb-2">
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={userName}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Enter your username"
+              />
+            </div>
 
-        <form onSubmit={handleLogin}>
-          <TextField
-            label="UserName"
-            fullWidth
-            value={userName}
-            onChange={(e) => setUsername(e.target.value)}
-            sx={{
-              marginBottom: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-              },
-            }}
-          />
-          <TextField
-            type="password"
-            label="Password"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{
-              marginBottom: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-              },
-            }}
-          />
+            <div className="mb-6">
+              <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Enter your password"
+              />
+            </div>
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{
-              paddingY: 1.5,
-              fontWeight: 'bold',
-              letterSpacing: 1,
-              backgroundColor: '#004e92',
-              '&:hover': {
-                backgroundColor: '#003d75',
-              },
-              borderRadius: '8px',
-            }}
-          >
-            Login
-          </Button>
-        </form>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold tracking-wide hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-200"
+            >
+              Login
+            </button>
+          </form>
+        </div>
 
-        <Grid container justifyContent="center" sx={{ marginTop: 3 }}>
-          <Grid item>
-            <Typography variant="body2" sx={{ color: '#666' }}>
-              Don't have an account?{' '}
-              <Link
-                href="/register"
-                sx={{
-                  textDecoration: 'none',
-                  color: '#004e92',
-                  fontWeight: 'bold',
-                }}
-              >
-                Register
-              </Link>
-            </Typography>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
+        <div className="p-4 bg-gray-100 text-center">
+          <p className="text-gray-600">
+            Don&apos;t have an account?{' '}
+            <a href="/register" className="text-blue-500 font-medium hover:underline">
+              Register
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 
