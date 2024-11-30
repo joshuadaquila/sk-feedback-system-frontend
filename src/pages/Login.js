@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaUserAlt, FaLock } from 'react-icons/fa'; 
 
 const Login = () => {
   const [userName, setUsername] = useState('');
@@ -40,7 +41,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-700 to-blue-400 p-5">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-md w-full">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm w-full"> 
         <div className="p-6">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">SK Event System</h2>
           <p className="text-center text-gray-600 mb-6">Log in to access your account</p>
@@ -52,30 +53,26 @@ const Login = () => {
           )}
 
           <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label htmlFor="username" className="block text-gray-700 font-medium mb-2">
-                Username
-              </label>
+            <div className="mb-4 relative">
+              <FaUserAlt className="absolute left-3 top-3 text-gray-400" />
               <input
                 id="username"
                 type="text"
                 value={userName}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Enter your username"
               />
             </div>
 
-            <div className="mb-6">
-              <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
-                Password
-              </label>
+            <div className="mb-6 relative">
+              <FaLock className="absolute left-3 top-3 text-gray-400" />
               <input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Enter your password"
               />
             </div>
