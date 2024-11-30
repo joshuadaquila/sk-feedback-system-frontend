@@ -49,8 +49,7 @@ const Register = () => {
       educationBackground,
       userType,
     } = formData;
-
-    
+   
     if (
       !firstName ||
       !middleName ||
