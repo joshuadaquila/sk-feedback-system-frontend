@@ -33,8 +33,10 @@ const Events = () => {
 
       const categorizedEvents = {
         upcoming: eventList.filter((event) => new Date(event.startDate) > now),
-        present: eventList.filter((event) => new Date(event.startDate) <= now),
-        past: eventList.filter((event) => new Date(event.startDate) < now),
+        present: eventList.filter(
+          (event) => new Date(event.startDate) <= now && new Date(event.endDate) >= now
+        ),
+        past: eventList.filter((event) => new Date(event.endDate) < now),
       };
 
       setEvents(categorizedEvents);
