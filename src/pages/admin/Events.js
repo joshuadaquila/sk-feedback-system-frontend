@@ -2,35 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import { FaCalendarAlt, FaMapMarkerAlt, FaRegCalendarAlt, FaEdit, FaTrash } from "react-icons/fa";
+import { get } from "../../api";
 
 const Events = () => {
   const [category, setCategory] = useState("present");
   const [events, setEvents] = useState({
     upcoming: [],
-    present: [
-      {
-        eventId: "1",
-        eventName: "Sample Event",
-        description: "This is a sample event description.",
-        place: "Sample Location",
-        startDate: "2024-12-01",
-      },
-      {
-        eventId: "1",
-        eventName: "Sample Event",
-        description: "This is a sample event description.",
-        place: "Sample Location",
-        startDate: "2024-12-01",
-      },
-      {
-        eventId: "1",
-        eventName: "Sample Event",
-        description: "This is a sample event description.",
-        place: "Sample Location",
-        startDate: "2024-12-01",
-      },
-    ],
-    past: [],
+    present: [],
   });
   const [eventDetails, setEventDetails] = useState({
     eventId: "",
@@ -38,6 +16,7 @@ const Events = () => {
     description: "",
     place: "",
     startDate: "",
+    endDate: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
@@ -45,8 +24,10 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get("/api/events");
-      const eventList = response.data;
+      const response = await axios.get("http://localhost:3001/user/getAllEvents");
+      const eventList = response.data.events;
+
+      console.log(eventList);
 
       const now = new Date();
 
@@ -100,7 +81,7 @@ const Events = () => {
       } else {
         // Add new event
         const response = await axios.post(
-          "http://localhost:3001/user/createEvent",
+          "http://localhost:3001/user/addEvent",
           {
             ...eventDetails,
             createdAt: new Date().toISOString(),
@@ -123,6 +104,7 @@ const Events = () => {
         description: "",
         place: "",
         startDate: "",
+        endDate: ""
       });
       setIsModalOpen(false);
     } catch (error) {
@@ -152,6 +134,20 @@ const Events = () => {
       alert("Failed to delete event. Please try again.");
     }
     setIsConfirmDeleteOpen(false);
+  };
+
+  const formatDate = (date) => {
+    const options = {
+      // weekday: 'long', // "Monday"
+      year: 'numeric', // "2023"
+      month: 'long', // "November"
+      day: 'numeric', // "3"
+      hour: 'numeric', // "5"
+      minute: 'numeric', // "00"
+      hour12: true, // 12-hour format with AM/PM
+    };
+  
+    return new Date(date).toLocaleString('en-US', options);
   };
 
   return (
@@ -189,6 +185,7 @@ const Events = () => {
                 description: "",
                 place: "",
                 startDate: "",
+                endDate: ""
               });
               setIsModalOpen(true);
             }}
@@ -228,10 +225,18 @@ const Events = () => {
                   placeholder="Description"
                 />
                 <input
-                  type="date"
+                  type="datetime-local"
                   id="startDate"
                   name="startDate"
                   value={eventDetails.startDate}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <input
+                  type="datetime-local"
+                  id="endDate"
+                  name="endDate"
+                  value={eventDetails.endDate}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
@@ -283,7 +288,12 @@ const Events = () => {
 
                     <div className="flex items-center text-gray-600 border-b border-gray-200 mb-4">
                       <FaRegCalendarAlt className="mr-2" />
-                      <span className="font-medium">{event.startDate}</span>
+                      <span className="font-medium">{formatDate(event.startDate)}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-600 border-b border-gray-200 mb-4">
+                      <FaRegCalendarAlt className="mr-2" />
+                      <span className="font-medium">{formatDate(event.endDate)}</span>
                     </div>
 
                     <div className="flex items-center text-gray-600 border-b border-gray-200 mb-4">
