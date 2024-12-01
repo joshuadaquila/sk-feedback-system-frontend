@@ -47,7 +47,7 @@ const UserDashboard = () => {
   };
   console.log(events)
   return (
-    <div className=" min-h-full text-black py-2 flex justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
+    <div className=" h-[90%] text-black py-2 flex justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
       {/* Top Bar */}
       <div className="bg-gray-200 text-black py-2 flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
         <div className="flex flex-col items-start max-w-2xl space-y-1">
@@ -86,7 +86,7 @@ const UserDashboard = () => {
           <>
             {category === "all" || category === "upcoming" ? (
               <>
-                <h2 className="text-lg font-bold mb-4">Upcoming Events</h2>
+                <h2 className="text-lg font-bold mb-4 bg-gray-200 my-4 p-2">Upcoming Events</h2>
                 {events.upcoming.length > 0 ? (
                   events.upcoming.map((event) => (
                     <UserEventCard key={event.id} data={event} />
@@ -99,7 +99,7 @@ const UserDashboard = () => {
 
             {category === "all" || category === "present" ? (
               <>
-                <h2 className="text-lg font-bold mb-4">Ongoing Events</h2>
+                <h2 className="text-lg font-bold mb-4 bg-gray-200 my-4 p-2">Ongoing Events</h2>
                 {events.present.length > 0 ? (
                   events.present.map((event) => (
                     <UserEventCard key={event.id} data={event} />
@@ -112,10 +112,10 @@ const UserDashboard = () => {
 
             {category === "all" || category === "past" ? (
               <>
-                <h2 className="text-lg font-bold mb-4">Past Events</h2>
+                <h2 className="text-lg font-bold mb-4 bg-gray-200 my-4 p-2">Past Events</h2>
                 {events.past.length > 0 ? (
                   events.past.map((event) => (
-                    <UserEventCard key={event.id} data={event} />
+                    <UserEventCard key={event.id} data={event} past={true}/>
                   ))
                 ) : (
                   <p>No past events.</p>

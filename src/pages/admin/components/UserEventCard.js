@@ -1,7 +1,7 @@
 import React from "react";
 import { FaCalendar, FaMapPin } from "react-icons/fa";
 
-const UserEventCard = ({ data }) => {
+const UserEventCard = ({ data, past }) => {
   const formatDate = (date) => {
     const options = {
       year: "numeric",
@@ -15,7 +15,7 @@ const UserEventCard = ({ data }) => {
   };
 
   return (
-    <div className="shadow-md p-4 rounded-md">
+    <div className="shadow-md p-4 rounded-md m-2">
       <p className="font-bold text-lg">{data.eventName}</p>
 
       <div className="flex">
@@ -34,6 +34,13 @@ const UserEventCard = ({ data }) => {
       </div>
 
       <p>{data.description}</p>
+
+      {past && (
+      <div className="flex items-end justify-end">
+        <p className="italic mr-2">Tell us your experience about this event.</p>
+        <button className="bg-blue-600 px-2 text-white rounded-full">Write Feedback</button>
+      </div>
+      )}
     </div>
   );
 };
