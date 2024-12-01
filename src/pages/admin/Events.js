@@ -269,10 +269,10 @@ const Events = () => {
         {events[category]?.length > 0 ? (
           <div className="flex justify-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
-              {events[category].slice(0, 4).map((event, index) => (
+              {events[category].map((event, index) => (
                 <div
                   key={event.eventId || index}
-                  className="relative max-w-lg border border-solid border-black rounded-2xl transition-all duration-500"
+                  className="relative w-[350px] min-h-[80px] border border-solid border-black rounded-2xl transition-all duration-500"
                 >
                   <div className="block overflow-hidden">
                     <img
@@ -284,25 +284,24 @@ const Events = () => {
 
                   <div className="p-4 border-b border-gray-200">
                     <h4 className="text-lg font-bold text-gray-800 mb-2 border-b border-gray-200 capitalize transition-all duration-500 flex items-center space-x-2">
-                      <FaCalendarAlt className="text-blue-600" />
                       <span>{event.eventName}</span>
                     </h4>
 
-                    <div className="flex items-center text-gray-600 border-b border-gray-200 mb-4">
+                    <div className="flex items-center text-gray-600 border-b pl-4 border-gray-200 mb-4">
                       <FaRegCalendarAlt className="mr-2" />
                       <span className="font-medium">{formatDate(event.startDate)}</span>
                     </div>
 
-                    <div className="flex items-center text-gray-600 border-b border-gray-200 mb-4">
+                    <div className="flex items-center text-gray-600 border-b pl-4 border-gray-200 mb-4">
                       <FaRegCalendarAlt className="mr-2" />
                       <span className="font-medium">{formatDate(event.endDate)}</span>
                     </div>
 
-                    <div className="flex items-center text-gray-600 border-b border-gray-200 mb-4">
+                    <div className="flex items-center text-gray-600 pl-4 border-b border-gray-200 mb-4">
                       <FaMapMarkerAlt className="mr-2" /> <span>{event.place}</span>
                     </div>
 
-                    <p className="text-gray-700 mb-5">{event.description}</p>
+                    <p className="text-gray-700 pl-5 mb-5">{event.description}</p>
 
                     <div className="mt-6 flex justify-end space-x-4">
                       <button

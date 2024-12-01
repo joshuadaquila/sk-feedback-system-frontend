@@ -11,16 +11,18 @@ const Register = () => {
     birthday: '',
     purok: '',
     civilStatus: '',
-    educationBackground: '',  // Updated field name
+    educationBackground: '',
     userName: '',
-    userType: '',
+    gender: '',
     password: '',
     confirmPassword: '',
-    status: '', // New field for status
+    status: 'active', 
+    userType: 'user',  // Set default value for userType
   });
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const navigate = useNavigate(); // useNavigate hook for redirection
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,9 +49,11 @@ const Register = () => {
       purok,
       civilStatus,
       educationBackground,
+      gender,
       userType,
+      status,
     } = formData;
-   
+
     if (
       !firstName ||
       !middleName ||
@@ -59,15 +63,14 @@ const Register = () => {
       !civilStatus ||
       !educationBackground ||
       !userName ||
-      !userType ||
       !password ||
-      !confirmPassword
+      !confirmPassword ||
+      !gender
     ) {
       setError('Please fill in all the required fields.');
       return;
     }
 
-    
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -84,11 +87,19 @@ const Register = () => {
         purok,
         civilStatus,
         educationBackground,
-        userType,
+        gender,
+        userType,  // Send userType as part of form data
         password,
+        status,
       });
 
       setSuccess('Registration successful! You can now log in.');
+      
+      // Redirect to login page after successful registration
+      setTimeout(() => {
+        navigate('/login');
+      },); // Delay the redirection by 2 seconds for the success message to show
+
       setFormData({
         firstName: '',
         middleName: '',
@@ -97,12 +108,13 @@ const Register = () => {
         birthday: '',
         purok: '',
         civilStatus: '',
-        educationBackground: '', 
+        educationBackground: '',
         userName: '',
-        userType: '',
+        gender: '',
         password: '',
         confirmPassword: '',
-        
+        status:'active',
+        userType: 'user',  // Reset to default value
       });
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
@@ -120,121 +132,166 @@ const Register = () => {
 
         <form onSubmit={handleRegister}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              placeholder="First Name"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              placeholder="Last Name"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="text"
-              name="middleName"
-              value={formData.middleName}
-              onChange={handleChange}
-              placeholder="Middle Name"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="text"
-              name="extensionName"
-              value={formData.extensionName}
-              onChange={handleChange}
-              placeholder="Extension Name (optional)"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
+            <div>
+              <label htmlFor="firstName" className="block text-gray-700 font-semibold">First Name <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="lastName" className="block text-gray-700 font-semibold">Last Name <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="middleName" className="block text-gray-700 font-semibold">Middle Name</label>
+              <input
+                type="text"
+                name="middleName"
+                value={formData.middleName}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="extensionName" className="block text-gray-700 font-semibold">Extension Name (optional)</label>
+              <input
+                type="text"
+                name="extensionName"
+                value={formData.extensionName}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <input
-              type="date"
-              name="birthday"
-              value={formData.birthday}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="text"
-              name="purok"
-              value={formData.purok}
-              onChange={handleChange}
-              placeholder="Purok"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="text"
-              name="civilStatus"
-              value={formData.civilStatus}
-              onChange={handleChange}
-              placeholder="Civil Status"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-            <select
-              name="educationBackground"
-              value={formData.educationBackground}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            >
-              <option value="">Select Education Background</option>
-              <option value="High School Level">High School Level</option>
-              <option value="High School Graduate">High School Graduate</option>
-              <option value="Elementary Level">Elementary Level</option>
-              <option value="Elementary Graduate">Elementary Graduate</option>
-              <option value="College Level">College Level</option>
-              <option value="College Graduate">College Graduate</option>
-            </select>
-          </div>
+            <div>
+              <label htmlFor="birthday" className="block text-gray-700 font-semibold">Birthday <span className="text-red-500">*</span></label>
+              <input
+                type="date"
+                name="birthday"
+                value={formData.birthday}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
 
-          <div className="mb-4">
-            <input
-              type="text"
-              name="userName"
-              value={formData.userName}
-              onChange={handleChange}
-              placeholder="Username"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-          </div>
+            <div>
+              <label htmlFor="gender" className="block text-gray-700 font-semibold">Gender <span className="text-red-500">*</span></label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
 
-          <div className="mb-4">
-            <select
-              name="userType"
-              value={formData.userType}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            >
-              <option value="">Select User Type</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </select>
+            <div>
+              <label htmlFor="purok" className="block text-gray-700 font-semibold">Purok <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                name="purok"
+                value={formData.purok}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="civilStatus" className="block text-gray-700 font-semibold">Civil Status <span className="text-red-500">*</span></label>
+              <select
+                name="civilStatus"
+                value={formData.civilStatus}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              >
+                <option value="">Select Civil Status</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+              </select>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm Password"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
+            <div>
+              <label htmlFor="educationBackground" className="block text-gray-700 font-semibold">Education Background <span className="text-red-500">*</span></label>
+              <select
+                name="educationBackground"
+                value={formData.educationBackground}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              >
+                <option value="">Select Education Background</option>
+                <option value="High School Level">High School Level</option>
+                <option value="High School Graduate">High School Graduate</option>
+                <option value="Elementary Level">Elementary Level</option>
+                <option value="Elementary Graduate">Elementary Graduate</option>
+                <option value="College Level">College Level</option>
+                <option value="College Graduate">College Graduate</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="userName" className="block text-gray-700 font-semibold">Username <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                name="userName"
+                value={formData.userName}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label htmlFor="password" className="block text-gray-700 font-semibold">Password <span className="text-red-500">*</span></label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-gray-700 font-semibold">Confirm Password <span className="text-red-500">*</span></label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
           </div>
 
           <button
