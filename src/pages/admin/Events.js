@@ -51,9 +51,9 @@ const Events = () => {
       const now = new Date();
 
       const categorizedEvents = {
-        upcoming: eventList.filter(event => new Date(event.startDate) > now),
-        present: eventList.filter(event => new Date(event.startDate) <= now),
-        past: eventList.filter(event => new Date(event.startDate) < now),
+        upcoming: eventList.filter((event) => new Date(event.startDate) > now),
+        present: eventList.filter((event) => new Date(event.startDate) <= now),
+        past: eventList.filter((event) => new Date(event.startDate) < now),
       };
 
       setEvents(categorizedEvents);
@@ -73,16 +73,24 @@ const Events = () => {
   };
 
   const handleSaveEvent = async () => {
-    if (!eventDetails.eventName || !eventDetails.description || !eventDetails.place || !eventDetails.startDate) {
+    if (
+      !eventDetails.eventName ||
+      !eventDetails.description ||
+      !eventDetails.place ||
+      !eventDetails.startDate
+    ) {
       alert("Please fill out all fields.");
       return;
     }
 
     try {
       if (eventDetails.eventId) {
-        const response = await axios.put(`http://localhost:3001/user/updateEvent/${eventDetails.eventId}`, {
-          ...eventDetails,
-        });
+        const response = await axios.put(
+          `http://localhost:3001/user/updateEvent/${eventDetails.eventId}`,
+          {
+            ...eventDetails,
+          }
+        );
 
         if (response.status === 200) {
           alert("Event updated successfully!");
@@ -91,12 +99,15 @@ const Events = () => {
         }
       } else {
         // Add new event
-        const response = await axios.post('http://localhost:3001/user/createEvent', {
-          ...eventDetails,
-          createdAt: new Date().toISOString(),
-          userId: localStorage.getItem("userId"),
-          status: "active",
-        });
+        const response = await axios.post(
+          "http://localhost:3001/user/createEvent",
+          {
+            ...eventDetails,
+            createdAt: new Date().toISOString(),
+            userId: localStorage.getItem("userId"),
+            status: "active",
+          }
+        );
 
         if (response.status === 200) {
           alert("Event created successfully!");
@@ -105,7 +116,7 @@ const Events = () => {
         }
       }
 
-      fetchEvents(); 
+      fetchEvents();
       setEventDetails({
         eventId: "",
         eventName: "",
@@ -113,7 +124,7 @@ const Events = () => {
         place: "",
         startDate: "",
       });
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error saving event:", error);
       alert("Failed to save event. Please try again.");
@@ -157,7 +168,9 @@ const Events = () => {
             {["present", "upcoming", "past"].map((cat) => (
               <span
                 key={cat}
-                className={`cursor-pointer text-lg font-medium ${category === cat ? "text-blue-600" : "text-gray-600"} hover:text-blue-800 transition-all duration-300`}
+                className={`cursor-pointer text-lg font-medium ${
+                  category === cat ? "text-blue-600" : "text-gray-600"
+                } hover:text-blue-800 transition-all duration-300`}
                 onClick={() => setCategory(cat)}
               >
                 {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -167,22 +180,22 @@ const Events = () => {
         </div>
 
         <div className="flex justify-end mt-8">
-        <button
-          className="bg-blue-600 text-white text-lg px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
-          onClick={() => {
-            setEventDetails({
-              eventId: "",
-              eventName: "",
-              description: "",
-              place: "",
-              startDate: "",
-            }); 
-            setIsModalOpen(true);
-          }}
-        >
-          + Add New Event
-        </button>
-      </div>
+          <button
+            className="bg-blue-600 text-white text-lg px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+            onClick={() => {
+              setEventDetails({
+                eventId: "",
+                eventName: "",
+                description: "",
+                place: "",
+                startDate: "",
+              });
+              setIsModalOpen(true);
+            }}
+          >
+            + Add New Event
+          </button>
+        </div>
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-30 flex justify-center items-center z-50 backdrop-blur-sm">
@@ -241,17 +254,18 @@ const Events = () => {
           </div>
         )}
 
+      <div className="mt-5">
+      <h3 className="text-xl font-bold mb-6 text-left">
+        {category.charAt(0).toUpperCase() + category.slice(1)} Events
+      </h3>
 
-        <div className="mt-5">
-          <h3 className="text-xl font-semibold mb-6">
-            {category.charAt(0).toUpperCase() + category.slice(1)} Events
-          </h3>
-          {events[category]?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {events[category].map((event, index) => (
+        {events[category]?.length > 0 ? (
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
+              {events[category].slice(0, 4).map((event, index) => (
                 <div
                   key={event.eventId || index}
-                  className="relative max-w-sm border border-solid border-black rounded-2xl transition-all duration-500"
+                  className="relative max-w-lg border border-solid border-black rounded-2xl transition-all duration-500"
                 >
                   <div className="block overflow-hidden">
                     <img
@@ -260,7 +274,7 @@ const Events = () => {
                       className="w-full h-40 object-cover rounded-t-2xl"
                     />
                   </div>
-                  
+
                   <div className="p-4 border-b border-gray-200">
                     <h4 className="text-lg font-bold text-gray-800 mb-2 border-b border-gray-200 capitalize transition-all duration-500 flex items-center space-x-2">
                       <FaCalendarAlt className="text-blue-600" />
@@ -298,34 +312,36 @@ const Events = () => {
                 </div>
               ))}
             </div>
-            
+          </div>
+        
+
           ) : (
             <p>No events found.</p>
           )}
-          {isConfirmDeleteOpen && (
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-white p-4 rounded-lg shadow-lg w-80 max-w-xs">
-                <h3 className="text-lg font-semibold mb-2 text-center">Confirm Deletion</h3>
-                <p className="text-sm mb-4 text-center">Are you sure you want to delete this event?</p>
-                <div className="flex justify-center space-x-3">
-                  <button
-                    onClick={confirmDelete}
-                    className="bg-red-600 text-white mr-4 text-sm px-4 py-2 rounded-lg hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => setIsConfirmDeleteOpen(false)}
-                    className="bg-gray-300 text-gray-800 text-sm px-4 py-2 rounded-lg hover:bg-gray-400"
-                  >
-                    Cancel
-                  </button>
-                </div>
+        </div>
+
+        {isConfirmDeleteOpen && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-4 rounded-lg shadow-lg w-80 max-w-xs">
+              <h3 className="text-lg font-semibold mb-2 text-center">Confirm Deletion</h3>
+              <p className="text-sm mb-4 text-center">Are you sure you want to delete this event?</p>
+              <div className="flex justify-center space-x-3">
+                <button
+                  onClick={confirmDelete}
+                  className="bg-red-600 text-white mr-4 text-sm px-4 py-2 rounded-lg hover:bg-red-700"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => setIsConfirmDeleteOpen(false)}
+                  className="bg-gray-300 text-gray-800 text-sm px-4 py-2 rounded-lg hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
-          )}
-
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
