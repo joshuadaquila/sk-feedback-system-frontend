@@ -6,6 +6,7 @@ import AdminPanel from './pages/admin/AdminPanel';
 import Dashboard from './pages/admin/Dashboard';
 import Events from './pages/admin/Events';
 import Announcement from './pages/admin/Announcement';
+import UserDashboard from './pages/user/UserDashboard';
 
 function App() {
   const isAuthenticated = localStorage.getItem('authToken');
@@ -20,6 +21,7 @@ function App() {
         <Route path="/admin/dashboard" element={<Dashboard />} />  
         <Route path="/admin/adminpanel" element={<AdminPanel />} />
         <Route path="/admin/announcement" element={<Announcement />} /> 
+        <Route path="/user/userdashboard" element={<UserDashboard />} />
       </Routes>
     </Router>
   );

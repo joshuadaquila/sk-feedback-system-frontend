@@ -167,23 +167,22 @@ const Events = () => {
         </div>
 
         <div className="flex justify-end mt-8">
-  <button
-    className="bg-blue-600 text-white text-lg px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
-    onClick={() => {
-      setEventDetails({
-        eventId: "",
-        eventName: "",
-        description: "",
-        place: "",
-        startDate: "",
-      }); 
-      setIsModalOpen(true);
-    }}
-  >
-    + Add New Event
-  </button>
-</div>
-
+        <button
+          className="bg-blue-600 text-white text-lg px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+          onClick={() => {
+            setEventDetails({
+              eventId: "",
+              eventName: "",
+              description: "",
+              place: "",
+              startDate: "",
+            }); 
+            setIsModalOpen(true);
+          }}
+        >
+          + Add New Event
+        </button>
+      </div>
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-30 flex justify-center items-center z-50 backdrop-blur-sm">

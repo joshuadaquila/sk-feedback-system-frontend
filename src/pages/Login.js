@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaUserAlt, FaLock } from 'react-icons/fa'; 
+import { FaUserAlt, FaLock } from 'react-icons/fa';
 
 const Login = () => {
   const [userName, setUsername] = useState('');
@@ -24,13 +24,14 @@ const Login = () => {
         password,
       });
       const { role, token } = response.data;
+      console.log("Role from backend:", role);
 
       localStorage.setItem('authToken', token);
 
       if (role === 'admin') {
-        navigate('/admin/dashboard');
+        navigate('/admin/adminpanel');
       } else if (role === 'user') {
-        navigate('/user/dashboard');
+        navigate('/user/userdashboard');
       } else {
         setError('Invalid role. Please contact support.');
       }
@@ -40,10 +41,18 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-700 to-blue-400 p-5">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm w-full"> 
+    <div className="min-h-screen flex flex-col items-center justify-center bg-blue-900 p-5">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-white mb-4">Patnongon SK Event and Announcement </h1>
+
+        <img
+          src={`${process.env.PUBLIC_URL}/logo.jpg`}
+          alt="Logo"
+          className="w-48 h-48 object-cover rounded-full mx-auto"
+        />
+      </div>
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-sm w-full">
         <div className="p-6">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">SK Event System</h2>
           <p className="text-center text-gray-600 mb-6">Log in to access your account</p>
 
           {error && (

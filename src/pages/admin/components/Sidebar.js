@@ -1,21 +1,31 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaCalendarAlt, FaBullhorn, FaSignOutAlt } from "react-icons/fa";
 
 const Sidebar = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); 
 
   const handleLogout = () => {
-    localStorage.removeItem("userToken"); 
-    navigate("/login"); 
+    localStorage.removeItem("userToken");
+    navigate("/login");
   };
+
+  
+  const isActive = (path) => location.pathname === path;
 
   return (
     <>
-      <div className="w-64 bg-blue-600 p-5 text-white h-full overflow-y-auto">
+      <div className="w-64 bg-blue-900 p-5 text-white h-full overflow-y-auto">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-white rounded-full mb-4"></div>
+          <div className="mb-4">
+            <img
+              src={`${process.env.PUBLIC_URL}/logo.jpg`}
+              alt="Logo"
+              className="w-32 h-32 object-cover rounded-full"
+            />
+          </div>
           <h2 className="text-2xl font-bold">Sk Event System</h2>
         </div>
 
@@ -23,30 +33,36 @@ const Sidebar = () => {
 
         <nav className="mt-4">
           <ul>
-            <li className="mb-4 border-b border-blue-500">
+            <li className="mb-4">
               <Link
                 to="/admin/dashboard"
-                className="flex items-center py-2 px-4 hover:bg-blue-700 rounded"
+                className={`flex items-center py-2 px-4 rounded ${
+                  isActive("/admin/dashboard") ? "bg-blue-700" : "hover:bg-blue-700"
+                }`}
               >
                 <FaTachometerAlt className="mr-4" />
                 Dashboard
               </Link>
             </li>
 
-            <li className="mb-4 border-b border-blue-500">
+            <li className="mb-4">
               <Link
                 to="/admin/events"
-                className="flex items-center py-2 px-4 hover:bg-blue-700 rounded"
+                className={`flex items-center py-2 px-4 rounded ${
+                  isActive("/admin/events") ? "bg-blue-700" : "hover:bg-blue-700"
+                }`}
               >
                 <FaCalendarAlt className="mr-4" />
                 Events
               </Link>
             </li>
 
-            <li className="mb-4 border-b border-blue-500">
+            <li className="mb-4">
               <Link
                 to="/admin/announcement"
-                className="flex items-center py-2 px-4 hover:bg-blue-700 rounded"
+                className={`flex items-center py-2 px-4 rounded ${
+                  isActive("/admin/announcement") ? "bg-blue-700" : "hover:bg-blue-700"
+                }`}
               >
                 <FaBullhorn className="mr-4" />
                 Announcement
