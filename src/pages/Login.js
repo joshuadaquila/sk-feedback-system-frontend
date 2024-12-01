@@ -23,10 +23,11 @@ const Login = () => {
         userName,
         password,
       });
-      const { role, token } = response.data;
+      const { role, userId, token } = response.data;
       console.log("Role from backend:", role);
-
+      console.log("userId", userId);
       localStorage.setItem('authToken', token);
+      localStorage.setItem('userId', userId);
 
       if (role === 'admin') {
         navigate('/admin/adminpanel');
