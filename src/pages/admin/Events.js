@@ -81,7 +81,6 @@ const Events = () => {
           throw new Error("Update failed");
         }
       } else {
-        // Add new event
         const response = await axios.post(
           "http://localhost:3001/user/addEvent",
           {
@@ -179,7 +178,7 @@ const Events = () => {
 
         <div className="flex justify-end mt-8">
           <button
-            className="bg-blue-600 text-white text-lg px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+            className="bg-blue-600 text-white text-sm px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
             onClick={() => {
               setEventDetails({
                 eventId: "",
@@ -226,14 +225,30 @@ const Events = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   placeholder="Description"
                 />
-                <input
-                  type="datetime-local"
-                  id="startDate"
-                  name="startDate"
-                  value={eventDetails.startDate}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
+                <div className="mb-4">
+                  <label
+                    htmlFor="startDate"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Start Date
+                  </label>
+                  <input
+                    type="datetime-local"
+                    id="startDate"
+                    name="startDate"
+                    value={eventDetails.startDate}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="endDate"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  End Date
+                </label>
                 <input
                   type="datetime-local"
                   id="endDate"
@@ -242,6 +257,8 @@ const Events = () => {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
+              </div>
+
               </div>
               <div className="flex justify-end mt-6 space-x-3">
                 <button
@@ -265,7 +282,6 @@ const Events = () => {
       <h3 className="text-xl font-bold mb-6 text-left">
         {category.charAt(0).toUpperCase() + category.slice(1)} Events
       </h3>
-
         {events[category]?.length > 0 ? (
           <div className="flex justify-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">

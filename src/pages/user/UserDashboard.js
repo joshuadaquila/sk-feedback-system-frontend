@@ -49,9 +49,9 @@ const UserDashboard = () => {
   return (
     <div className=" h-[90%] text-black py-2 flex justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
       {/* Top Bar */}
-      <div className="bg-gray-200 text-black py-2 flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
-        <div className="flex flex-col items-start max-w-2xl space-y-1">
-          <h1 className="text-xl font-bold">Events</h1>
+      <div className="bg-gray-200 text-black py-4 flex items-center h-[10%] justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
+        <div className="flex flex-col items-start max-w-2xl ">
+          <h1 className="text-lg font-bold">Events</h1>
           <div className="mb-2">
             <div className="flex space-x-4">
               {["all", "present", "upcoming", "past"].map((cat) => (
