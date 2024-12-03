@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCalendar, FaMapPin } from "react-icons/fa";
-
+import axios from "axios";
 const UserEventCard = ({ data, past }) => {
   const [showFbForm, setShowFbForm] = useState(false)
+  const [feedback, setFeedback] = useState("");
+  const [userId, setUserId] = useState(0);
+  const [eventId, setEventId] = useState(0);
+
+  useEffect(()=> {
+    const id = localStorage.getItem('userId');
+    setUserId(id);
+    setEventId(data.eventId);
+  }, [])
   const formatDate = (date) => {
     const options = {
       year: "numeric",
@@ -14,6 +23,11 @@ const UserEventCard = ({ data, past }) => {
     };
     return new Date(date).toLocaleString("en-US", options);
   };
+
+  const handleAddFeedback = () => {
+    const response = axios.post('http://localhost:3001/user/addFeedback', { userId: userId, eventId: eventId, content: feedback });
+    console.log(response);
+  }
 
   return (
     <div className="shadow-md p-4 rounded-md mb-4 m-2 border">
@@ -56,10 +70,11 @@ const UserEventCard = ({ data, past }) => {
           </button>
           <textarea
             placeholder="Write here..."
+            onChange={(e)=> setFeedback(e.target.value)}
             className="w-full h-48 p-2 border rounded-md"
           />
           <div className="mt-2">
-            <button className="bg-green-600 text-white rounded-full px-3 py-1">Save</button>
+            <button className="bg-green-600 text-white rounded-full px-3 py-1" onClick={handleAddFeedback}>Save</button>
           </div>
         </div>
       )}
