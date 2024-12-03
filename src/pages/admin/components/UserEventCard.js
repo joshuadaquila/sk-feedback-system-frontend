@@ -35,7 +35,7 @@ const UserEventCard = ({ data, past }) => {
         <p>{data.place}</p>
       </div>
 
-      <p>{data.description}</p>
+      <p className=" pl-5 mt-5 mb-5">{data.description}</p>
 
       {past && (
       <div className="flex items-end justify-end">
