@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminPanel from './pages/admin/AdminPanel';
-import Dashboard from './pages/admin/Dashboard';
 import Events from './pages/admin/Events';
 import Announcement from './pages/admin/Announcement';
 import UserDashboard from './pages/user/UserDashboard';
@@ -19,8 +18,7 @@ function App() {
         <Route path="/" element={isAuthenticated ? <Navigate to="/login" /> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin/events" element={<Events />} />  
-        <Route path="/admin/dashboard" element={<Dashboard />} />  
+        <Route path="/admin/events" element={<Events />} />    
         <Route path="/admin/adminpanel" element={<AdminPanel />} />
         <Route path="/admin/announcement" element={<Announcement />} /> 
 
