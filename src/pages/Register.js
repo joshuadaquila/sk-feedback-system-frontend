@@ -71,6 +71,12 @@ const Register = () => {
       return;
     }
 
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Password must be at least 8 characters, include one lowercase, one uppercase, and one unique character.');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -88,7 +94,7 @@ const Register = () => {
         civilStatus,
         educationBackground,
         gender,
-        userType,  // Send userType as part of form data
+        userType,  
         password,
         status,
       });
@@ -98,7 +104,7 @@ const Register = () => {
       // Redirect to login page after successful registration
       setTimeout(() => {
         navigate('/login');
-      },); // Delay the redirection by 2 seconds for the success message to show
+      },2000); // Delay the redirection by 2 seconds for the success message to show
 
       setFormData({
         firstName: '',
