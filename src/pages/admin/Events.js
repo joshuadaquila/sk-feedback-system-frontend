@@ -19,6 +19,7 @@ const Events = () => {
     endDate: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
 
@@ -92,9 +93,9 @@ const Events = () => {
         );
 
         if (response.status === 200) {
-          alert("Event created successfully!");
+          setSuccessMessage("Event created successfully!");
         } else {
-          throw new Error("Creation failed");
+          throw new Error("Update failed");
         }
       }
 
@@ -107,7 +108,10 @@ const Events = () => {
         startDate: "",
         endDate: ""
       });
-      setIsModalOpen(false);
+      setTimeout(() => {
+        setSuccessMessage("");
+        setIsModalOpen(false);
+      }, 1000); 
     } catch (error) {
       console.error("Error saving event:", error);
       alert("Failed to save event. Please try again.");
@@ -276,6 +280,10 @@ const Events = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
               </div>
+
+              {successMessage && (
+                <p className="text-green-600 text-center mt-4">{successMessage}</p>
+              )}
 
               </div>
               <div className="flex justify-end mt-6 space-x-3">

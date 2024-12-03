@@ -1,17 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { FaCalendar, FaMapPin } from "react-icons/fa";
 import axios from "axios";
+
 const UserEventCard = ({ data, past }) => {
-  const [showFbForm, setShowFbForm] = useState(false)
+  const [showFbForm, setShowFbForm] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [userId, setUserId] = useState(0);
-  const [eventId, setEventId] = useState(0);
+  
+  const [feedbackExists, setFeedbackExists] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  useEffect(()=> {
-    const id = localStorage.getItem('userId');
+  useEffect(() => {
+    const id = localStorage.getItem("userId");
     setUserId(id);
-    setEventId(data.eventId);
-  }, [])
+    
+    const checkFeedback = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/user/checkFeedback`,
+          {
+            params: { userId: id, eventId: data.eventId },
+          }
+        );
+        setFeedbackExists(response.data.exists); 
+      } catch (error) {
+        console.error("Error checking feedback:", error);
+      }
+    };
+
+    checkFeedback();
+  }, [data.eventId]);
+
   const formatDate = (date) => {
     const options = {
       year: "numeric",
@@ -24,14 +43,27 @@ const UserEventCard = ({ data, past }) => {
     return new Date(date).toLocaleString("en-US", options);
   };
 
-  const handleAddFeedback = () => {
-    const response = axios.post('http://localhost:3001/user/addFeedback', { userId: userId, eventId: eventId, content: feedback });
-    console.log(response);
-  }
+  const handleAddFeedback = async () => {
+    try {
+      const response = await axios.post("http://localhost:3001/user/addFeedback", {
+        userId: userId,
+        eventId: data.eventId,
+        content: feedback,
+      });
+
+      if (response.status === 200) {
+        setFeedbackExists(true); 
+        setShowFbForm(false);
+        setSuccessMessage("Thanks for writing your feedback!");
+        setTimeout(() => setSuccessMessage(""), 3000);
+      }
+    } catch (error) {
+      console.error("Error adding feedback:", error);
+    }
+  };
 
   return (
     <div className="shadow-md p-4 rounded-md mb-4 m-2 border">
-      
       <p className="font-bold text-lg">{data.eventName}</p>
 
       <div className="flex">
@@ -44,25 +76,37 @@ const UserEventCard = ({ data, past }) => {
         <p>{formatDate(data.startDate)}</p>
         <p>- {formatDate(data.endDate)}</p>
       </div>
-      <div  className="flex items-center space-x-2 mt-2">
-        <FaMapPin className="text-blue-500"/>
+      <div className="flex items-center space-x-2 mt-2">
+        <FaMapPin className="text-blue-500" />
         <p>{data.place}</p>
       </div>
 
-      <p className=" pl-5 mt-5 mb-5">{data.description}</p>
+      <p className="pl-5 mt-5 mb-5">{data.description}</p>
 
       {past && (
-      <div className="flex items-end justify-end">
-        <p className="italic mr-2">Tell us your experience about this event.</p>
-        <button className="bg-blue-600 px-2 text-white rounded-full"
-          onClick={()=> setShowFbForm(!showFbForm)}
-        >Write Feedback</button>
-      </div>
+        <div className="flex items-end justify-end">
+          {feedbackExists ? (
+            <button
+              className="bg-gray-500 px-2 text-white rounded-full cursor-not-allowed"
+              disabled
+            >
+              Done Feedback
+            </button>
+          ) : (
+            <button
+              className="bg-blue-600 px-2 text-white rounded-full"
+              onClick={() => setShowFbForm(!showFbForm)}
+            >
+              Write Feedback
+            </button>
+          )}
+        </div>
       )}
+
       {showFbForm && (
         <div className="bg-white p-4 max-w-lg w-full rounded-lg flex flex-col items-end">
           <button
-            onClick={()=> setShowFbForm(false)}
+            onClick={() => setShowFbForm(false)}
             className="absolute top-2 right-2 text-gray-500 hover:text-black"
             aria-label="Close Feedback Form"
           >
@@ -70,12 +114,23 @@ const UserEventCard = ({ data, past }) => {
           </button>
           <textarea
             placeholder="Write here..."
-            onChange={(e)=> setFeedback(e.target.value)}
+            onChange={(e) => setFeedback(e.target.value)}
             className="w-full h-48 p-2 border rounded-md"
           />
           <div className="mt-2">
-            <button className="bg-green-600 text-white rounded-full px-3 py-1" onClick={handleAddFeedback}>Save</button>
+            <button
+              className="bg-green-600 text-white rounded-full px-3 py-1"
+              onClick={handleAddFeedback}
+            >
+              Save
+            </button>
           </div>
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mt-4 text-green-700 bg-green-100 p-2 rounded">
+          {successMessage}
         </div>
       )}
     </div>
