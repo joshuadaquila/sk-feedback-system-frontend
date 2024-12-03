@@ -35,7 +35,7 @@ const Sidebar = () => {
           <ul>
             <li className="mb-4">
               <Link
-                to="/admin/dashboard"
+                to="/admin/adminpanel"
                 className={`flex items-center py-2 px-4 rounded ${
                   isActive("/admin/dashboard") ? "bg-blue-700" : "hover:bg-blue-700"
                 }`}

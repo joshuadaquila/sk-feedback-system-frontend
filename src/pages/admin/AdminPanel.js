@@ -69,6 +69,7 @@ const AdminDashboard = () => {
         borderColor: "#f8bbd0",
         borderWidth: 3, 
         borderRadius: 5,
+        barThickness: 50,
       },
     ],
   };
@@ -142,7 +143,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-lg font-bold mb-4">Current Announcements</h2>
+          <h2 className="text-lg font-semibold text-gray-600 mb-2">Current Announcements</h2>
         </div>
       </main>
     </div>
