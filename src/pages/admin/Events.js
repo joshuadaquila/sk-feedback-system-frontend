@@ -251,7 +251,7 @@ const Events = () => {
   
         <div className="flex justify-end mt-8">
           <button
-            className="bg-blue-600 text-white text-sm px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+            className="bg-blue-600 text-white text-sm px-6 py-3 rounded-full mr-8 shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
             onClick={() => {
               setEventDetails({
                 eventId: "",
@@ -396,13 +396,15 @@ const Events = () => {
   
                       <p className="text-gray-700 pl-2 text-sm mb-4">{event.description}</p>
                       <div className="mt-auto flex justify-center space-x-4">
+                      {category === "past" && (
                         <button
                           onClick={() => handleGenerateReport(event.eventId)}
                           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium"
                         >
                           Generate Report
                         </button>
-                      </div>
+                      )}
+                    </div>
                     </div>
                     <div className="absolute bottom-2 right-2 flex space-x-2">
                       <button
