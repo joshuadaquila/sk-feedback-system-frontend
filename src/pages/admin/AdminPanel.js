@@ -122,11 +122,10 @@ const AdminDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
-      <main className="flex-1 p-6 bg-gray-50 overflow-y-auto"> 
+      <main className="flex-1 p-6 bg-gray-50 overflow-y-auto">
         <h1 className="text-2xl font-bold mb-4"></h1>
-
         <section className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-600 mb-2">Events Overview</h2>
+          <h2 className="text-lg font-semibold ml-8 text-gray-600 mb-2">Events Overview</h2>
           <div className="h-40">
             <Doughnut data={doughnutData} options={doughnutOptions} />
           </div>
@@ -134,7 +133,7 @@ const AdminDashboard = () => {
 
         {/* <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 mb-6"></div> */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-600 mb-2">Feedback Overview</h2>
+          <h2 className="text-lg font-semibold ml-8 text-gray-600 mb-2">Feedback Overview</h2>
           <div className="flex justify-center">
             <div className="w-full md:w-2/3">
               <Bar data={barData} options={barOptions} height={300} />

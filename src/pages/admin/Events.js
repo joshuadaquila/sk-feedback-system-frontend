@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./components/Sidebar";
-import { FaCalendarCheck, FaCalendarTimes, FaMapMarkerAlt, FaRegCalendarAlt, FaEdit, FaTrash } from "react-icons/fa";
+import { FaCalendarCheck, FaCalendarTimes, FaTimes,FaMapMarkerAlt, FaRegCalendarAlt, FaEdit, FaTrash } from "react-icons/fa";
 import { get } from "../../api";
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto';
 
 const Events = () => {
   const [category, setCategory] = useState("present");
@@ -22,6 +24,28 @@ const Events = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
+  const [reportData, setReportData] = useState(null); 
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleFeedbackList = () => {
+    setIsExpanded((prevState) => !prevState);
+  };
+
+  const fetchFeedbacks = async (eventId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:3001/user/getFeedbackByEvent/${eventId}`);
+      setFeedbacks(response.data.feedbacks);
+    } catch (error) {
+      console.error("Error fetching feedbacks:", error);
+      alert("Failed to load feedbacks.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchEvents = async () => {
     try {
@@ -47,9 +71,21 @@ const Events = () => {
     }
   };
 
+  const [eventId, setEventId] = useState(null);
+
+  useEffect(() => {
+    const storedEventId = localStorage.getItem("eventId")
+    if (storedEventId) {
+      setEventId(storedEventId);  
+    }
+  }, []);
+  
+
   useEffect(() => {
     fetchEvents();
-  }, []);
+    fetchFeedbacks(eventId);
+    setShowReport(true);
+  }, [eventId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -151,53 +187,68 @@ const Events = () => {
       minute: 'numeric', // "00"
       hour12: true, // 12-hour format with AM/PM
     };
-    
-  
     return new Date(date).toLocaleString('en-US', options);
-
-    
-  };
+  }; 
   const handleGenerateReport = (eventId) => {
     console.log(`Generating report for event ${eventId}`);
-    
+    const sentimentData = {
+      positive: 60,
+      neutral: 25,
+      negative: 15,
+    };
+    const overallSentiment = Object.keys(sentimentData).reduce((prev, curr) =>
+      sentimentData[curr] > sentimentData[prev] ? curr : prev
+    );
+    const chartData = {
+      labels: ['Positive', 'Neutral', 'Negative'],
+      datasets: [
+        {
+          data: [sentimentData.positive, sentimentData.neutral, sentimentData.negative],
+          backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
+        },
+      ],
+    };
+    setReportData({
+      eventId,
+      sentimentData,
+      chartData,
+      overallSentiment,
+    });
   };
 
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
       <div className="flex-1 overflow-y-auto bg-gray-50">
-      
-      <div className="sticky top-0 bg-gray-100 z-10 ">
-        <div className="flex justify-between items-center">
-          <h2 className="text-3xl font-semibold ml-8 mt-8 text-gray-800">Event Management</h2>
+        <div className="sticky top-0 bg-gray-100 z-10">
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-semibold ml-8 mt-8 text-gray-800">Event Management</h2>
+          </div>
+          <div className="border-b-2 border-gray-600 mt-4"></div>
+          <div className="mt-4">
+            <nav className="flex" aria-label="Breadcrumb">
+              <ol className="inline-flex items-center ml-8 mb-1 space-x-1 md:space-x-3">
+                {["present", "upcoming", "past"].map((cat, index, arr) => (
+                  <li key={cat} className="inline-flex items-center">
+                    <a
+                      href="javascript:;"
+                      className={`inline-flex items-center text-base font-medium ${
+                        category === cat ? "text-blue-600" : "text-gray-600"
+                      } hover:text-blue-800 transition-all duration-300`}
+                      onClick={() => setCategory(cat)}
+                    >
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </a>
+                    {index < arr.length - 1 && (
+                      <span className="text-gray-300 mx-2 inline-flex items-center justify-center">{'>'}</span>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </nav> {/* Closing the <nav> tag here */}
+          </div>
         </div>
-        
-
-        <div className="border-b-2 border-gray-600 mt-4"></div>
-
-        <div className="mt-4">
-        <nav className="flex" aria-label="Breadcrumb">
-          <ol className="inline-flex items-center ml-8 mb-1 space-x-1 md:space-x-3">
-            {["present", "upcoming", "past"].map((cat, index, arr) => (
-              <li key={cat} className="inline-flex items-center">
-                <a
-                  href="javascript:;"
-                  className={`inline-flex items-center text-base font-medium ${
-                    category === cat ? "text-blue-600" : "text-gray-600"
-                  } hover:text-blue-800 transition-all duration-300`}
-                  onClick={() => setCategory(cat)}
-                >
-                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </a>
-                {index < arr.length - 1 && (
-                  <span className="text-gray-300 mx-2 inline-flex items-center justify-center">{'>'}</span>
-                )}
-              </li>
-            ))}
-          </ol>
-          </nav>
-        </div>
-      </div>
+  
         <div className="flex justify-end mt-8">
           <button
             className="bg-blue-600 text-white text-sm px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
@@ -216,7 +267,7 @@ const Events = () => {
             + Add New Event
           </button>
         </div>
-
+  
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-30 flex justify-center items-center z-50 backdrop-blur-sm">
             <div className="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md">
@@ -263,28 +314,28 @@ const Events = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                 </div>
-
-              <div className="mb-4">
-                <label
-                  htmlFor="endDate"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  End Date
-                </label>
-                <input
-                  type="datetime-local"
-                  id="endDate"
-                  name="endDate"
-                  value={eventDetails.endDate}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-
-              {successMessage && (
-                <p className="text-green-600 text-center mt-4">{successMessage}</p>
-              )}
-
+  
+                <div className="mb-4">
+                  <label
+                    htmlFor="endDate"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    End Date
+                  </label>
+                  <input
+                    type="datetime-local"
+                    id="endDate"
+                    name="endDate"
+                    value={eventDetails.endDate}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+  
+                {successMessage && (
+                  <p className="text-green-600 text-center mt-4">{successMessage}</p>
+                )}
+  
               </div>
               <div className="flex justify-end mt-6 space-x-3">
                 <button
@@ -303,7 +354,7 @@ const Events = () => {
             </div>
           </div>
         )}
-
+  
         <div className="mt-5">
           <h3 className="text-xl font-bold ml-8 mb-6 text-left">
             {category.charAt(0).toUpperCase() + category.slice(1)} Events
@@ -327,22 +378,22 @@ const Events = () => {
                       <h4 className="text-lg font-semibold text-gray-900 mb-2 capitalize">
                         {event.eventName}
                       </h4>
-
+  
                       <div className="flex items-center text-gray-600 mb-2">
                         <FaCalendarCheck className="mr-2 text-green-500" />
                         <span className="font-medium">{formatDate(event.startDate)}</span>
                       </div>
-
+  
                       <div className="flex items-center text-gray-600 mb-2">
                         <FaCalendarTimes className="mr-2 text-red-500" />
                         <span className="font-medium">{formatDate(event.endDate)}</span>
                       </div>
-
+  
                       <div className="flex items-center text-gray-600 mb-4">
                         <FaMapMarkerAlt className="mr-2 text-blue-500" />
                         <span>{event.place}</span>
                       </div>
-
+  
                       <p className="text-gray-700 pl-2 text-sm mb-4">{event.description}</p>
                       <div className="mt-auto flex justify-center space-x-4">
                         <button
@@ -375,6 +426,87 @@ const Events = () => {
             <p className="ml-8">No events found.</p>
           )}
         </div>
+        {reportData && (
+          <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-[40%] max-w-xl max-h-[80%] overflow-y-auto">
+            <div className="sticky top-0 bg-gray-100 z-10 border-b-2 border-gray-00 p-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold">Event Report</h2>
+                <button
+                  onClick={() => setReportData(null)}
+                  className="text-lg text-gray-700 hover:text-red-600"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <h3 className="font-semibold text-lg mb-4">
+                Overall Sentiment:
+                <span className="font-bold capitalize ml-2">
+                  {reportData.overallSentiment}
+                </span>
+              </h3>
+        
+              <h3 className="text-lg font-semibold text-gray-600 mb-6">
+                Sentiment Breakdown
+              </h3>
+              <div
+                className="flex items-center justify-center ml-32 mr-10  mb-4"
+                style={{ maxWidth: "250px", height: "250px" }}
+              >
+                <Pie
+                  data={reportData.chartData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: true,
+                  }}
+                />
+              </div>
+        
+              <div>
+                <h3 className="font-semibold text-lg mt-4">Sentiment Details</h3>
+                <ul>
+                  <li>Positive: {reportData.sentimentData.positive}%</li>
+                  <li>Neutral: {reportData.sentimentData.neutral}%</li>
+                  <li>Negative: {reportData.sentimentData.negative}%</li>
+                </ul>
+              </div>
+        
+              <button
+                onClick={toggleFeedbackList}
+                className="px-2 mt-4 bg-gray-500 text-sm text-white rounded-md"
+              >
+                {isExpanded ? "Hide Feedbacks" : "Show Feedbacks"}
+              </button>
+        
+              {isExpanded && (
+                <div className="mt-4">
+                  {loading ? (
+                    <p>Loading feedbacks...</p>
+                  ) : feedbacks.length > 0 ? (
+                    <ul className="mt-4">
+                      {feedbacks.map((feedback) => (
+                        <li
+                          key={feedback.feedbackId}
+                          className="border-b border-gray-200 py-2"
+                        >
+                          <p className="text-sm font-medium">User ID: {feedback.userId}</p>
+                          <p className="text-sm text-gray-700">{feedback.content}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No feedbacks available for this event.</p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        )}
+  
         {isConfirmDeleteOpen && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-4 rounded-lg shadow-lg w-80 max-w-xs">
@@ -400,6 +532,6 @@ const Events = () => {
       </div>
     </div>
   );
-};
+}  
 
 export default Events;
