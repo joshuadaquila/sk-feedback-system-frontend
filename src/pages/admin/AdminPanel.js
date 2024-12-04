@@ -123,30 +123,29 @@ const AdminDashboard = () => {
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <main className="flex-1 p-6 bg-gray-50 overflow-y-auto">
-        <h1 className="text-2xl font-bold mb-4"></h1>
-        <section className="mb-6">
-          <h2 className="text-lg font-semibold ml-8 text-gray-600 mb-2">Events Overview</h2>
-          <div className="h-40">
-            <Doughnut data={doughnutData} options={doughnutOptions} />
-          </div>
-        </section>
-
-        {/* <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 mb-6"></div> */}
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold ml-8 text-gray-600 mb-2">Feedback Overview</h2>
-          <div className="flex justify-center">
-            <div className="w-full md:w-2/3">
+        <h1 className="text-2xl font-bold mb-6"></h1>
+        <section className="bg-white shadow-lg rounded-lg p-6 mb-6 hover:shadow-xl transition-shadow">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Overview</h2>
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="w-full md:w-1/2 h-60">
+              <Doughnut data={doughnutData} options={doughnutOptions} />
+            </div>
+            <div className="w-full md:w-1/2 h-60">
               <Bar data={barData} options={barOptions} height={300} />
             </div>
           </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-lg font-semibold text-gray-600 mb-2">Current Announcements</h2>
-        </div>
+        </section>
+        
+        <section className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow mb-6">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Current Announcements</h2>
+          <div className="p-4 rounded-lg bg-gray-50 shadow-md">
+            <p className="text-sm text-gray-600">No current announcements</p>
+          </div>
+        </section>
       </main>
     </div>
   );
+  
 };
 
 export default AdminDashboard;

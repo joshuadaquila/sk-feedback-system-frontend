@@ -10,49 +10,49 @@ const UserSidebar = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-blue-600 max-w-screen-sm mx-auto shadow-md z-50 rounded-xl mb-5">
-      <div className="flex justify-around items-center py-2">
+    <div className="fixed bottom-0 left-0 right-0 bg-blue-600 max-w-screen-sm mx-auto shadow-md z-50 rounded-lg mb-3">
+      <div className="flex justify-around items-center py-1">
         <div className="flex flex-col items-center">
           <button
             onClick={() => navigateTo('userdashboard')}
-            className="text-white hover:text-gray-200 text-xl"
+            className="text-white hover:text-gray-200 text-lg" // Reduced size
           >
             <FaCalendarAlt />
           </button>
-          <span className="text-white text-sm mt-1">Events</span>
+          <span className="text-white text-xs mt-0.5">Events</span> {/* Smaller text */}
         </div>
-        <div className="h-8 border-l-2 border-gray-300"></div>
+        <div className="h-6 border-l-2 border-gray-300"></div> {/* Shorter divider */}
 
         <div className="flex flex-col items-center">
           <button
             onClick={() => navigateTo('userannouncement')}
-            className="text-white hover:text-gray-200 text-xl" 
+            className="text-white hover:text-gray-200 text-lg" // Reduced size
           >
             <FaBullhorn />
           </button>
-          <span className="text-white text-sm mt-1">Announcements</span>
+          <span className="text-white text-xs mt-0.5">Announcements</span> {/* Smaller text */}
         </div>
-        <div className="h-8 border-l-2 border-gray-300"></div>
+        <div className="h-6 border-l-2 border-gray-300"></div> {/* Shorter divider */}
 
         <div className="flex flex-col items-center">
           <button
-            onClick={() => navigateTo('notifications')}
-            className="text-white hover:text-gray-200 text-xl" 
+            onClick={() => navigateTo('notification')}
+            className="text-white hover:text-gray-200 text-lg" // Reduced size
           >
             <FaBell />
           </button>
-          <span className="text-white text-sm mt-1">Notifications</span>
+          <span className="text-white text-xs mt-0.5">Notifications</span> {/* Smaller text */}
         </div>
-        <div className="h-8 border-l-2 border-gray-300"></div>
+        <div className="h-6 border-l-2 border-gray-300"></div> {/* Shorter divider */}
 
         <div className="flex flex-col items-center">
           <button
             onClick={() => navigateTo('profile')}
-            className="text-white hover:text-gray-200 text-xl" 
+            className="text-white hover:text-gray-200 text-lg" // Reduced size
           >
             <FaUserAlt />
           </button>
-          <span className="text-white text-sm mt-1">Profile</span>
+          <span className="text-white text-xs mt-0.5">Profile</span> {/* Smaller text */}
         </div>
       </div>
     </div>

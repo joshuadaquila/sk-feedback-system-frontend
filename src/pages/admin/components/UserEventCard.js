@@ -67,21 +67,21 @@ const UserEventCard = ({ data, past }) => {
       <p className="font-bold text-lg">{data.eventName}</p>
 
       <div className="flex">
-        <p className="text-gray-600 mr-2 text-sm">@{data.userName}</p>
-        <p className="text-gray-600 text-sm">{formatDate(data.createdAt)}</p>
+        <p className="text-gray-600 mr-2 text-xs">@{data.userName}</p>
+        <p className="text-gray-600 text-xs">{formatDate(data.createdAt)}</p>
       </div>
 
       <div className="flex items-center space-x-2 mt-2">
         <FaCalendar className="text-blue-500" />
-        <p>{formatDate(data.startDate)}</p>
-        <p>- {formatDate(data.endDate)}</p>
+        <p className="text-sm">{formatDate(data.startDate)}</p>
+        <p className="text-sm">- {formatDate(data.endDate)}</p>
       </div>
       <div className="flex items-center space-x-2 mt-2">
         <FaMapPin className="text-blue-500" />
-        <p>{data.place}</p>
+        <p className="text-sm">{data.place}</p>
       </div>
 
-      <p className="pl-5 mt-5 mb-5">{data.description}</p>
+      <p className="pl-5 mt-5 mb-5 text-sm">{data.description}</p>
 
       {past && (
         <div className="flex items-end justify-end">

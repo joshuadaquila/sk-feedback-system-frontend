@@ -7,7 +7,8 @@ import Events from './pages/admin/Events';
 import Announcement from './pages/admin/Announcement';
 import UserDashboard from './pages/user/UserDashboard';
 import UserAnnouncement from './pages/user/UserAnnouncement';
-
+import Notification from './pages/user/Notification';
+import Profile from './pages/user/Profile';
 
 function App() {
   const isAuthenticated = localStorage.getItem('authToken');
@@ -25,6 +26,8 @@ function App() {
         
         <Route path="/user/userdashboard" element={<UserDashboard />} />
         <Route path="/user/userannouncement" element={<UserAnnouncement />} />
+        <Route path="/user/notification" element={<Notification />} />
+        <Route path="/user/profile" element={<Profile />} />
         
       </Routes>
     </Router>
