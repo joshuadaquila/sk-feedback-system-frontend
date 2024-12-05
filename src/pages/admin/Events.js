@@ -5,6 +5,7 @@ import { FaCalendarCheck, FaCalendarTimes, FaTimes,FaMapMarkerAlt, FaRegCalendar
 import { get } from "../../api";
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
+import GenerateReport from "./components/GenerateReport";
 
 const Events = () => {
   const [category, setCategory] = useState("present");
@@ -29,6 +30,7 @@ const Events = () => {
   const [loading, setLoading] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [reportId, setReportId] = useState(0);
 
   const toggleFeedbackList = () => {
     setIsExpanded((prevState) => !prevState);
@@ -191,6 +193,7 @@ const Events = () => {
   }; 
   const handleGenerateReport = (eventId) => {
     console.log(`Generating report for event ${eventId}`);
+    setReportId(eventId);
     const sentimentData = {
       positive: 60,
       neutral: 25,
@@ -215,6 +218,11 @@ const Events = () => {
       overallSentiment,
     });
   };
+
+  const renderReport = () => {
+    console.log("render report is triggered")
+    setReportData(false)
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -428,86 +436,7 @@ const Events = () => {
             <p className="ml-8">No events found.</p>
           )}
         </div>
-        {reportData && (
-          <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-[40%] max-w-xl max-h-[80%] overflow-y-auto">
-            <div className="sticky top-0 bg-gray-100 z-10 border-b-2 border-gray-00 p-4">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Event Report</h2>
-                <button
-                  onClick={() => setReportData(null)}
-                  className="text-lg text-gray-700 hover:text-red-600"
-                >
-                  <FaTimes />
-                </button>
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="font-semibold text-lg mb-4">
-                Overall Sentiment:
-                <span className="font-bold capitalize ml-2">
-                  {reportData.overallSentiment}
-                </span>
-              </h3>
-        
-              <h3 className="text-lg font-semibold text-gray-600 mb-6">
-                Sentiment Breakdown
-              </h3>
-              <div
-                className="flex items-center justify-center ml-32 mr-10  mb-4"
-                style={{ maxWidth: "250px", height: "250px" }}
-              >
-                <Pie
-                  data={reportData.chartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: true,
-                  }}
-                />
-              </div>
-        
-              <div>
-                <h3 className="font-semibold text-lg mt-4">Sentiment Details</h3>
-                <ul>
-                  <li>Positive: {reportData.sentimentData.positive}%</li>
-                  <li>Neutral: {reportData.sentimentData.neutral}%</li>
-                  <li>Negative: {reportData.sentimentData.negative}%</li>
-                </ul>
-              </div>
-        
-              <button
-                onClick={toggleFeedbackList}
-                className="px-2 mt-4 bg-gray-500 text-sm text-white rounded-md"
-              >
-                {isExpanded ? "Hide Feedbacks" : "Show Feedbacks"}
-              </button>
-        
-              {isExpanded && (
-                <div className="mt-4">
-                  {loading ? (
-                    <p>Loading feedbacks...</p>
-                  ) : feedbacks.length > 0 ? (
-                    <ul className="mt-4">
-                      {feedbacks.map((feedback) => (
-                        <li
-                          key={feedback.feedbackId}
-                          className="border-b border-gray-200 py-2"
-                        >
-                          <p className="text-sm font-medium">User ID: {feedback.userId}</p>
-                          <p className="text-sm text-gray-700">{feedback.content}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No feedbacks available for this event.</p>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        
-        )}
+        {reportData && <GenerateReport eventId={reportId} requestCompleted={renderReport}/> }
   
         {isConfirmDeleteOpen && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
