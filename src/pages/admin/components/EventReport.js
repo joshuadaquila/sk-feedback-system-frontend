@@ -96,29 +96,36 @@ const EventReport = ({ eventId, overallSentiment, requestCompleted, positive, ne
       </button>
 
       {isExpanded && (
-        <div className="mt-4">
-          {loading ? (
-            <p>Loading feedbacks...</p>
-          ) : feedbacks.length > 0 ? (
-            <ul className="mt-4">
-              {feedbacks.map((feedback) => (
-                <li
-                  key={feedback.feedbackId}
-                  className="border-b border-gray-200 py-2"
-                >
-                  <p className="text-sm font-medium">@{feedback.userName}</p>
-                  <p className="text-sm text-gray-700">{feedback.content}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No feedbacks available for this event.</p>
-          )}
+    <div className="mt-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      {loading ? (
+        <div className="flex items-center justify-center py-4">
+          <span className="ml-2 text-gray-500">Loading feedbacks...</span>
         </div>
-      )}
+         ) : feedbacks.length > 0 ? (
+          <ul className="divide-y divide-gray-200">
+            {feedbacks.map((feedback) => (
+              <li key={feedback.feedbackId} className="py-4">
+                <div className="flex items-center gap-3">
+                  {/* <div className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm font-bold">
+                    {feedback.userName.charAt(0).toUpperCase()}
+                  </div> */}
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">@{feedback.userName}</p>
+                    <p className="text-sm text-gray-700 mt-1">{feedback.content}</p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500 text-center">No feedbacks available for this event.</p>
+        )}
+      </div>
+    )}
+  </div>
+       
     </div>
   </div>
-</div>
   )
   
 }

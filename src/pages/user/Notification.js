@@ -28,10 +28,9 @@ const UserNotification = () => {
   }, []);
 
   return (
-    <div className="h-[90%] text-black py-2 flex justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl">
-      {/* Top Bar */}
-      <div className="bg-gray-200 text-black py-4 h-[10%] flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
-        <h1 className="text-xl font-bold">Notifications</h1>
+    <div className="h-[90%] text-black py-1 flex justify-between px-4 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-lg mt-4">
+      <div className="bg-gray-200 text-black py-2 flex items-center h-[8%] justify-between px-4 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-lg mt-4">
+        <h1 className="text-base font-bold">Notifications</h1>
 
         <div className="relative w-64">
           <input
@@ -46,7 +45,7 @@ const UserNotification = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto pt-20 max-w-screen-sm mx-auto rounded-xl mt-6 px-6">
+      <div className="flex-1 overflow-y-auto pt-16 px-4">
         {filteredNotifications.length === 0 ? (
           <p className="text-gray-600">No notifications available.</p>
         ) : (

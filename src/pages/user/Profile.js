@@ -42,17 +42,16 @@ const UserDashboard = () => {
   const navigateTo = (page) => {
     navigate(`/${page}`);
   };
-
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove the token
-    navigate("/login"); // Redirect to the login page
+    localStorage.removeItem('token'); 
+    navigate("/login"); 
   };
 
   return (
-    <div className="h-[90%] text-black py-2 flex justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl">
-      {/* Top Bar */}
-      <div className="bg-gray-200 text-black py-4 h-[10%] flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-xl mt-5">
-        <h1 className="text-xl font-bold">Profile</h1>
+    <div className="h-[90%] text-black py-1 flex justify-between px-4 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-lg mt-4">
+    <div className="bg-gray-200 text-black py-2 flex items-center h-[8%] justify-between px-4 fixed top-0 left-0 right-0 z-50 max-w-screen-sm mx-auto rounded-lg mt-4">
+        <h1 className="text-base font-bold">Profile</h1>
 
         <div className="relative w-64">
           <input
@@ -67,7 +66,7 @@ const UserDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto pt-20 max-w-screen-sm mx-auto rounded-xl mt-6 px-6">
+      <div className="flex-1 overflow-y-auto pt-16 px-4">
         {error && <div className="text-red-500 mb-4">{error}</div>}
 
         <div className="bg-white shadow-xl rounded-lg p-6 mb-6">
@@ -135,15 +134,40 @@ const UserDashboard = () => {
           </div>
 
           {/* Log Out Button */}
-          <div className="flex items-center justify-center mt-6">
-            <button
-              className="flex items-center bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600"
-              onClick={handleLogout}
-            >
-              <FaSignOutAlt className="mr-2" />
-              Log Out
-            </button>
-          </div>
+<div className="flex items-center justify-center mt-6">
+  <button
+    className="flex items-center bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600"
+    onClick={() => setIsLogoutModalOpen(true)}
+  >
+    <FaSignOutAlt className="mr-2" />
+    Log Out
+  </button>
+</div>
+
+{/* Logout Confirmation Modal */}
+{isLogoutModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+      <h3 className="text-lg font-semibold mb-4">Confirm Logout</h3>
+      <p className="text-gray-600 mb-6">Are you sure you want to log out?</p>
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
+        >
+          Logout
+        </button>
+        <button
+          onClick={() => setIsLogoutModalOpen(false)}
+          className="bg-gray-300 text-gray-800 px-6 py-2 rounded hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
         </div>
       </div>
 

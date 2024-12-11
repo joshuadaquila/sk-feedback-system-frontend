@@ -26,7 +26,8 @@ const Sidebar = () => {
               className="w-32 h-32 object-cover rounded-full"
             />
           </div>
-          <h2 className="text-2xl font-bold">Sk Event System</h2>
+          <h2 className="text-lg font-bold">Sk Event Feedback and</h2>
+          <h2 className="text-lg ml-2 font-bold">Announcement</h2>
         </div>
 
         <div className="w-full h-px bg-blue-500 mb-4" />

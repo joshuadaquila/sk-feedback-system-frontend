@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaUserAlt, FaLock } from 'react-icons/fa';
+import { FaUserAlt, FaLock, FaSignInAlt } from 'react-icons/fa';
 
 const Login = () => {
   const [userName, setUsername] = useState('');
@@ -44,7 +44,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-blue-900 p-5">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-4">Patnongon SK Event and Announcement </h1>
+        <h1 className="text-3xl font-bold text-white mb-4">SK Event and Announcement Hub </h1>
 
         <img
           src={`${process.env.PUBLIC_URL}/logo.jpg`}
@@ -89,8 +89,9 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold tracking-wide hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-200"
+              className="w-full bg-blue-500 text-white py-2 rounded-lg font-medium tracking-wide flex items-center justify-center gap-2 hover:bg-teal-600 focus:outline-none focus:ring-4 focus:ring-teal-300 transition-all duration-200"
             >
+              <FaSignInAlt className="text-lg" />
               Login
             </button>
           </form>
