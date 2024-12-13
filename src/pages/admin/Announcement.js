@@ -55,29 +55,49 @@ const Announcements = () => {
     }
 
     try {
+      let response;
       if (announcementDetails.announcementId) {
-        await axios.put(`http://localhost:3001/user/CreateAnnouncements/${announcementDetails.announcementId}`, announcementDetails);
-        setSuccessMessage("Announcement updated successfully!");  // Set success message for update
+        // Update announcement
+        response = await axios.put(
+          `http://localhost:3001/user/CreateAnnouncements/${announcementDetails.announcementId}`,
+          announcementDetails
+        );
+        setSuccessMessage("Announcement updated successfully!");
       } else {
-        await axios.post("http://localhost:3001/user/CreateAnnouncements", announcementDetails);
-        setSuccessMessage("Announcement created successfully!");  // Set success message for new creation
+        // Create new announcement
+        response = await axios.post(
+          "http://localhost:3001/user/CreateAnnouncements",
+          {
+            ...announcementDetails,
+            createdAt: new Date().toISOString(),
+            userId: localStorage.getItem("userId"),
+          }
+        );
+        setSuccessMessage("Announcement created successfully!");
       }
-      fetchAnnouncements();
-      setAnnouncementDetails({
-        announcementId: "",
-        title: "",
-        description: "",
-        audience: "ALL",
-        createdAt: "",
-      });
-      setIsModalOpen(false);
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 1000);
+
+      if (response.status === 200 || response.status === 201) {
+        fetchAnnouncements();
+        setAnnouncementDetails({
+          announcementId: "",
+          title: "",
+          description: "",
+          audience: "ALL",
+          createdAt: "",
+        });
+        setIsModalOpen(false);
+      } else {
+        throw new Error("Operation failed");
+      }
+
+      // Clear success message after a short delay
+      setTimeout(() => setSuccessMessage(""), 1000);
     } catch (error) {
       console.error("Error saving announcement:", error);
+      alert("Failed to save announcement. Please try again.");
     }
   };
+
 
   const handleEditAnnouncement = (announcement) => {
     setAnnouncementDetails(announcement);
