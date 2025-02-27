@@ -5,6 +5,8 @@ import Register from './pages/Register';
 import AdminPanel from './pages/admin/AdminPanel';
 import Events from './pages/admin/Events';
 import Announcement from './pages/admin/Announcement';
+import Report from './pages/admin/Report';
+import Account from './pages/admin/Account';
 import UserDashboard from './pages/user/UserDashboard';
 import UserAnnouncement from './pages/user/UserAnnouncement';
 import Notification from './pages/user/Notification';
@@ -21,7 +23,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/admin/events" element={<Events />} />    
         <Route path="/admin/adminpanel" element={<AdminPanel />} />
-        <Route path="/admin/announcement" element={<Announcement />} /> 
+        <Route path="/admin/announcement" element={<Announcement />} />
+        <Route path="/admin/report" element={<Report />} />
+        <Route path="/admin/account" element={<Account />} /> 
 
         
         <Route path="/user/userdashboard" element={<UserDashboard />} />

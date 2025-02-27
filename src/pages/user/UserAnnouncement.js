@@ -11,6 +11,8 @@ const Announcement = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // Initialize `searchQuery`
 
+  
+
   const fetchAnnouncements = async () => {
     try {
       const response = await axios.get("http://localhost:3001/user/getAnnouncements");

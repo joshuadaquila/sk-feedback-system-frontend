@@ -4,7 +4,7 @@ import { FaSearch, FaSignOutAlt } from "react-icons/fa";
 import UserSidebar from "./userSidebar";
 import axios from "axios"; // For fetching user data
 
-const UserDashboard = () => {
+const Profile = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [userData, setUserData] = useState({
@@ -177,4 +177,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default Profile;

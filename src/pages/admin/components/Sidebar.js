@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaTachometerAlt, FaCalendarAlt, FaBullhorn, FaSignOutAlt } from "react-icons/fa";
+import { FaTachometerAlt, FaCalendarAlt, FaBullhorn, FaSignOutAlt, FaFileArchive } from "react-icons/fa";
 
 const Sidebar = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -60,6 +60,18 @@ const Sidebar = () => {
 
             <li className="mb-4">
               <Link
+                to="/admin/report"
+                className={`flex items-center py-2 px-4 rounded ${
+                  isActive("/admin/report") ? "bg-blue-700" : "hover:bg-blue-700"
+                }`}
+              >
+                <FaFileArchive className="mr-4" />
+                Report
+              </Link>
+            </li>
+
+            <li className="mb-4">
+              <Link
                 to="/admin/announcement"
                 className={`flex items-center py-2 px-4 rounded ${
                   isActive("/admin/announcement") ? "bg-blue-700" : "hover:bg-blue-700"
@@ -67,6 +79,18 @@ const Sidebar = () => {
               >
                 <FaBullhorn className="mr-4" />
                 Announcement
+              </Link>
+            </li>
+
+            <li className="mb-4">
+              <Link
+                to="/admin/account"
+                className={`flex items-center py-2 px-4 rounded ${
+                  isActive("/admin/account") ? "bg-blue-700" : "hover:bg-blue-700"
+                }`}
+              >
+                <FaFileArchive className="mr-4" />
+                Account
               </Link>
             </li>
 
