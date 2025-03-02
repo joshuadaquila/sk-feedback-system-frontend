@@ -243,23 +243,26 @@ const GenerateReport = ({ eventId, requestCompleted }) => {
       </div>
       
       {viewFeedbacks && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white relative p-6 w-3/4 max-w-xl rounded-lg shadow-lg">
-            <FontAwesomeIcon icon={faClose} className='absolute right-4 top-4 cursor-pointer' onClick={()=> setViewFeedbacks(false)}/>
-            <p className="font-semibold text-xl mb-4">Feedbacks</p>
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white relative p-6 w-3/4 max-w-4xl rounded-lg shadow-lg">
+          <FontAwesomeIcon icon={faClose} className='absolute right-4 top-4 cursor-pointer' onClick={() => setViewFeedbacks(false)} />
+          <p className="font-semibold text-xl mb-4">Feedbacks</p>
 
-            <div className="overflow-y-scroll max-h-52">
-              {console.log("feedbacks", feedbacks)}
-              {feedbacks.map((feedback, index) => (
+          <div className="overflow-y-scroll max-h-96">
+            {feedbacks.length === 0 ? (
+              <p className="text-center text-gray-500 bg-blue-100 p-4 rounded-md">No feedbacks available.</p>
+            ) : (
+              feedbacks.map((feedback, index) => (
                 <div key={index} className="p-4 border shadow-md m-2">
                   <p>{feedback.content}</p>
                   <p className="text-gray-600 text-sm">{feedback.createdAt}</p>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
           </div>
         </div>
-      )}
+      </div>
+    )}
 
     </div>
   );

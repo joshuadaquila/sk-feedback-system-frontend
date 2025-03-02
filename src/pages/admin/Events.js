@@ -8,6 +8,7 @@ import { Chart as ChartJS } from 'chart.js/auto';
 import GenerateReport from "./components/GenerateReport";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { Modal } from 'antd';
 
 const Events = () => {
   const [category, setCategory] = useState("present");
@@ -91,7 +92,7 @@ const Events = () => {
     fetchEvents();
     fetchFeedbacks(eventId);
     setShowReport(true);
-  }, [eventId]);
+  }, [eventId, isConfirmDeleteOpen]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -111,17 +112,23 @@ const Events = () => {
 
     try {
       if (eventDetails.eventId) {
-        const response = await axios.put(
-          `http://localhost:3001/user/updateEvent/${eventDetails.eventId}`,
+        const response = await axios.post(
+          `http://localhost:3001/user/updateEvent`, // Change POST to PUT
           {
             ...eventDetails,
           }
         );
-
+    
         if (response.status === 200) {
-          alert("Event updated successfully!");
+          Modal.info({
+            title: 'Information',
+            content: 'Event is updated successfully.',
+            onOk() {},
+          });
+
+          setShowOptions(false)
         } else {
-          throw new Error("Update failed");
+          throw new Error("Failed to update event. Please try again.");
         }
       } else {
         const response = await axios.post(
@@ -133,14 +140,14 @@ const Events = () => {
             status: "active",
           }
         );
-
+    
         if (response.status === 200) {
           setSuccessMessage("Event created successfully!");
         } else {
-          throw new Error("Update failed");
+          throw new Error("Failed to create event. Please try again.");
         }
       }
-
+    
       fetchEvents();
       setEventDetails({
         eventId: "",
@@ -148,16 +155,18 @@ const Events = () => {
         description: "",
         place: "",
         startDate: "",
-        endDate: ""
+        endDate: "",
       });
+    
       setTimeout(() => {
         setSuccessMessage("");
         setIsModalOpen(false);
-      }, 1000); 
+      }, 1000);
     } catch (error) {
       console.error("Error saving event:", error);
-      alert("Failed to save event. Please try again.");
+      alert(error.message);  // Display the specific error message
     }
+    
   };
 
   const handleEditEvent = (event) => {
@@ -172,21 +181,33 @@ const Events = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3001/user/deleteEvents/${eventToDelete}`);
+      const response = await axios.delete(`http://localhost:3001/user/deleteEvent/${eventToDelete}`);
       
       if (response.status === 200) {
-        setEvents((prevEvents) =>
-          prevEvents.filter((event) => event.eventId !== eventToDelete)
-        );
+        // Ensure prevEvents is an array before calling filter
+        setEvents((prevEvents) => {
+          if (Array.isArray(prevEvents)) {
+            return prevEvents.filter((event) => event.eventId !== eventToDelete);
+          }
+          // If for any reason prevEvents is not an array, return an empty array (fallback)
+          return [];
+        });
       }
+
+      Modal.info({
+        title: 'Information',
+        content: 'Event is deleted successfully.',
+        onOk() {},
+      });
       
       setIsConfirmDeleteOpen(false);
-      alert("Event deleted successfully!");
+      // alert("Event deleted successfully!");
     } catch (error) {
       console.error("Error deleting Event:", error);
       alert("Failed to delete Event. Please try again.");
     }
   };
+  
   
   const formatDate = (date) => {
     const options = {
@@ -420,9 +441,9 @@ const Events = () => {
                           <FontAwesomeIcon icon={faEllipsisV} />
                         </div>
                         {showOptions === event.eventId && (
-                          <div className="shadow-md bg-gray-200 absolute right-6 top-5 px-4 py-2">
-                            <p>Edit</p>
-                            <p>Delete</p>
+                          <div className="shadow-md bg-gray-200 absolute flex flex-col items-start right-6 top-5 px-4 py-2">
+                            <button onClick={()=> handleEditEvent(event)}>Edit</button>
+                            <button onClick={()=> handleDeleteEvent(event.eventId)}>Delete</button>
                           </div>
                         )}
 

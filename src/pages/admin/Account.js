@@ -3,13 +3,16 @@ import { FaEdit, FaTrash, FaCalendar, FaMapPin, FaGlobeAsia } from "react-icons/
 import Sidebar from "./components/Sidebar";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faClose, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faCancel, faClose, faEye, faUserAltSlash, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { Modal } from 'antd';
 
 const Account = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null); // To hold the user data for the modal
   const [isModalOpen, setIsModalOpen] = useState(false); // To control the modal visibility
+  const [confirmationDel, setConfirmationDel] = useState(false)
   const [confirmation, setConfirmation] = useState(false)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -19,7 +22,7 @@ const Account = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [confirmation, confirmationDel]);
 
   const formatDate = (date) => {
     const options = {
@@ -49,10 +52,38 @@ const Account = () => {
     setSelectedUser(null);
   };
   
-  const disableAccount = async (user) => {
+  const disableAccount = async () => {
+    console.log("user", user)
     
-    const response = await axios.post(`http://localhost:3001/user/disableUser/${user.userId}`);
+    const response = await axios.post(`http://localhost:3001/user/${user.status === 'active'? 'disable' : 'enable'}User/${user.userId}`);
     console.log(response)
+
+    setConfirmation(false)
+
+    if (response.status === 200){
+      Modal.info({
+        title: 'Information',
+        content: `User is ${user.status === 'active'? 'disabled': 'enabled'} successfully.`,
+        onOk() {},
+      });
+    }
+  }
+
+  const deleteAccount = async () => {
+    console.log("user", user)
+    
+    const response = await axios.post(`http://localhost:3001/user/deleteUser/${user.userId}`);
+    console.log(response)
+
+    setConfirmationDel(false)
+
+    if (response.status === 200){
+      Modal.info({
+        title: 'Information',
+        content: 'User is deleted successfully.',
+        onOk() {},
+      });
+    }
   }
 
   return (
@@ -99,12 +130,14 @@ const Account = () => {
                       <FontAwesomeIcon icon={faEye} className="inline mr-2" /> View
                     </button>
                     <button className="text-blue-500 hover:text-blue-700 ml-4"
-                    onClick={()=> {console.log("disabling"); setConfirmation(true)}}
+                    onClick={()=> {console.log("disabling"); setUser(user); setConfirmation(true)}}
                     >
-                      <FontAwesomeIcon icon={faCancel} className="inline mr-2"
-                       /> Disable
+                      <FontAwesomeIcon icon={user.status == "active"? faUserAltSlash : faUserCheck} className="inline mr-2"
+                       /> {user.status === 'active'? "Disable" : "Enable"} 
                     </button>
-                    <button className="text-red-500 hover:text-red-700 ml-4">
+                    <button className="text-red-500 hover:text-red-700 ml-4"
+                    onClick={()=> {console.log("disabling"); setUser(user); setConfirmationDel(true)}}
+                    >
                       <FaTrash className="inline mr-2" /> Delete
                     </button>
                   </td>
@@ -301,7 +334,7 @@ const Account = () => {
         {confirmation && (
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-20 flex justify-center items-center">
                 <div className="bg-white relative p-6 rounded-lg max-w-4xl shadow-lg">
-                    <p>Are you sure you want to disable this account?</p>
+                    <p>Are you sure you want to {user.userId === 'active'? "disable" : "enable"} this account?</p>
 
                     <div className="w-full flex justify-center items-center text-white justify">
 
@@ -313,6 +346,30 @@ const Account = () => {
 
                     <button className="bg-red-600 p-2 px-4 rounded-md"
                         onClick={()=> setConfirmation(false)}
+                    >
+                        No
+                    </button>
+
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {confirmationDel && (
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-20 flex justify-center items-center">
+                <div className="bg-white relative p-6 rounded-lg max-w-4xl shadow-lg">
+                    <p>Are you sure you want to delete this account?</p>
+
+                    <div className="w-full flex justify-center items-center text-white justify">
+
+                    <button className="bg-blue-600 p-2 px-4 m-2 rounded-md"
+                        onClick={deleteAccount}
+                    >
+                        Yes
+                    </button>
+
+                    <button className="bg-red-600 p-2 px-4 rounded-md"
+                        onClick={()=> setConfirmationDel(false)}
                     >
                         No
                     </button>
