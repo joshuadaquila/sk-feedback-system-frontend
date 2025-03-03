@@ -18,7 +18,7 @@ const Report = () => {
     const fetchReport = async () => {
       setLoading(true);  // Set loading to true before making the request
       try {
-        const response = await axios.get(`http://localhost:3001/admin/generateEventReport`);
+        const response = await axios.get(`https://sk-feedback-system-backend.onrender.com/admin/generateEventReport`);
         const feedbacks = response.data.feedbacks;  // Extract feedbacks from the response
         setData(feedbacks);  // Set the data in state
         setLdaExplanation(response.data.sentimentData.lda_explanations);  // Set LDA explanations
@@ -37,11 +37,11 @@ const Report = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/user/getEvents')
+        const response = await axios.get('https://sk-feedback-system-backend.onrender.com/user/getEvents')
         setEvents(response.data.events)
-        console.log(response)
+        // console.log(response)
       } catch(err) {
-        console.error(err)
+        // console.error(err)
       }
     }
 

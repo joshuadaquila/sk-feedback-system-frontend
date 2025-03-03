@@ -32,12 +32,12 @@ const Announcements = () => {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAnnouncements");
-      console.log(response.data);  
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAnnouncements");
+      // console.log(response.data);  
       const fetchedAnnouncements = response.data.announcements;
       setAnnouncements(fetchedAnnouncements);  
     } catch (error) {
-      console.error("Error fetching announcements:", error);
+      // console.error("Error fetching announcements:", error);
     }
   };
 
@@ -60,22 +60,22 @@ const Announcements = () => {
       let response;
       if (announcementDetails.announcementId) {
         response = await axios.put(
-          `http://localhost:3001/user/CreateAnnouncements/${announcementDetails.announcementId}`,
+          `https://sk-feedback-system-backend.onrender.com/user/CreateAnnouncements/${announcementDetails.announcementId}`,
           announcementDetails
         );
-        console.log('Update Response:', response);
+        // console.log('Update Response:', response);
         setSuccessMessage("Announcement updated successfully!");
       } else {
         
         response = await axios.post(
-          "http://localhost:3001/user/CreateAnnouncements",
+          "https://sk-feedback-system-backend.onrender.com/user/CreateAnnouncements",
           {
             ...announcementDetails,
             createdAt: new Date().toISOString(),
             userId: localStorage.getItem("userId"),
           }
         );
-        console.log('Create Response:', response);
+        // console.log('Create Response:', response);
         setSuccessMessage("Announcement created successfully!");
       }
   
@@ -95,8 +95,8 @@ const Announcements = () => {
   
       setTimeout(() => setSuccessMessage(""), 1000);
     } catch (error) {
-      console.error("Error saving announcement:", error);
-      alert("Failed to save announcement. Please try again.");
+      // console.error("Error saving announcement:", error);
+      // alert("Failed to save announcement. Please try again.");
     }
   };
   
@@ -112,7 +112,7 @@ const Announcements = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3001/user/deleteAnnouncement/${announcementToDelete}`);
+      const response = await axios.delete(`https://sk-feedback-system-backend.onrender.com/user/deleteAnnouncement/${announcementToDelete}`);
       if (response.status === 200) {
         setAnnouncements((prevAnnouncements) =>
           prevAnnouncements.filter((announcement) => announcement.announcementId !== announcementToDelete)
@@ -120,7 +120,7 @@ const Announcements = () => {
       }
       setIsConfirmDeleteOpen(false);
     } catch (error) {
-      console.error("Error deleting Announcement:", error);
+      // console.error("Error deleting Announcement:", error);
       alert("Failed to delete Announcement. Please try again.");
     }
   };

@@ -12,7 +12,7 @@ const UserNotification = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getNotifications");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getNotifications");
       setNotifications(response.data);
     } catch (error) {
       console.error("Error fetching notifications:", error);

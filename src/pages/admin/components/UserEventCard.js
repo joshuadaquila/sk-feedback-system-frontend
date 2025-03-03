@@ -17,7 +17,7 @@ const UserEventCard = ({ data, past }) => {
     const checkFeedback = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/user/checkFeedback`,
+          `https://sk-feedback-system-backend.onrender.com/user/checkFeedback`,
           {
             params: { userId: id, eventId: data.eventId },
           }
@@ -45,7 +45,7 @@ const UserEventCard = ({ data, past }) => {
 
   const handleAddFeedback = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/user/addFeedback", {
+      const response = await axios.post("https://sk-feedback-system-backend.onrender.com/user/addFeedback", {
         userId: userId,
         eventId: data.eventId,
         content: feedback,

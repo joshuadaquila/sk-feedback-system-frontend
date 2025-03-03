@@ -8,7 +8,7 @@ const GenerateError = ({ reportData, overallSentiment, requestCompleted }) => {
   const [feedbacks, setFeedbacks] = useState([])
 
   const toggleFeedbackList = () => {
-    console.log("hj")
+    // console.log("hj")
   }
   return(
     <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center z-50">

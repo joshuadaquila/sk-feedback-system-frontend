@@ -9,6 +9,8 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
+    localStorage.removeItem("authToken");
+    window.location.reload()
     navigate("/login");
   };
 

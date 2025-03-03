@@ -23,7 +23,7 @@ const Profile = () => {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('token'); // Get token from localStorage
-      const response = await axios.get("http://localhost:3001/user/getProfile", {
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getProfile", {
         headers: {
           Authorization: `Bearer ${token}`, // Add the token to the request headers
         }

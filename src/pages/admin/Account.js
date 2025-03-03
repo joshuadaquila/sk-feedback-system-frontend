@@ -16,8 +16,8 @@ const Account = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await axios.get("http://localhost:3001/user/getAllUsers");
-      console.log(response);
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAllUsers");
+      // console.log(response);
       setUsers(response.data); // Assuming 'data' is the actual user array
     };
 
@@ -53,10 +53,10 @@ const Account = () => {
   };
   
   const disableAccount = async () => {
-    console.log("user", user)
+    // console.log("user", user)
     
-    const response = await axios.post(`http://localhost:3001/user/${user.status === 'active'? 'disable' : 'enable'}User/${user.userId}`);
-    console.log(response)
+    const response = await axios.post(`https://sk-feedback-system-backend.onrender.com/user/${user.status === 'active'? 'disable' : 'enable'}User/${user.userId}`);
+    // console.log(response)
 
     setConfirmation(false)
 
@@ -70,10 +70,10 @@ const Account = () => {
   }
 
   const deleteAccount = async () => {
-    console.log("user", user)
+    // console.log("user", user)
     
-    const response = await axios.post(`http://localhost:3001/user/deleteUser/${user.userId}`);
-    console.log(response)
+    const response = await axios.post(`https://sk-feedback-system-backend.onrender.com/user/deleteUser/${user.userId}`);
+    // console.log(response)
 
     setConfirmationDel(false)
 
@@ -130,13 +130,13 @@ const Account = () => {
                       <FontAwesomeIcon icon={faEye} className="inline mr-2" /> View
                     </button>
                     <button className="text-blue-500 hover:text-blue-700 ml-4"
-                    onClick={()=> {console.log("disabling"); setUser(user); setConfirmation(true)}}
+                    onClick={()=> {setUser(user); setConfirmation(true)}}
                     >
                       <FontAwesomeIcon icon={user.status == "active"? faUserAltSlash : faUserCheck} className="inline mr-2"
                        /> {user.status === 'active'? "Disable" : "Enable"} 
                     </button>
                     <button className="text-red-500 hover:text-red-700 ml-4"
-                    onClick={()=> {console.log("disabling"); setUser(user); setConfirmationDel(true)}}
+                    onClick={()=> {setUser(user); setConfirmationDel(true)}}
                     >
                       <FaTrash className="inline mr-2" /> Delete
                     </button>

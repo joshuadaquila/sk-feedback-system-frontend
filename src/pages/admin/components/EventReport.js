@@ -17,8 +17,8 @@ const EventReport = ({ eventId, overallSentiment, requestCompleted, positive, ne
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/admin/getRawFeedbacks?eventId=${eventId}`);
-        console.log("feedbacks", response.data);
+        const response = await axios.get(`https://sk-feedback-system-backend.onrender.com/admin/getRawFeedbacks?eventId=${eventId}`);
+        // console.log("feedbacks", response.data);
         setFeedbacks(response.data)
       } catch (error) {
         console.error("Error fetching feedbacks:", error);

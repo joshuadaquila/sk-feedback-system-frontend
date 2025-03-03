@@ -83,7 +83,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/user/createAccount', {
+      const response = await axios.post('https://sk-feedback-system-backend.onrender.com/user/createAccount', {
         userName,
         firstName,
         middleName,

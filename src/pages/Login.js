@@ -7,44 +7,57 @@ const Login = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     if (!userName || !password) {
       setError('Both username and password are required.');
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/user/login', {
+      const response = await axios.post('https://sk-feedback-system-backend.onrender.com/user/login', {
         userName,
         password,
       });
+
       const { role, userId, token } = response.data;
-      console.log("Role from backend:", role);
-      console.log("userId", userId);
+      // console.log("Role from backend:", role);
+      // console.log("userId", userId);
+
       localStorage.setItem('authToken', token);
       localStorage.setItem('userId', userId);
 
-      if (role === 'admin') {
-        navigate('/admin/adminpanel');
-      } else if (role === 'user') {
-        navigate('/user/userdashboard');
+      // Ensure token is in localStorage before proceeding
+      if (localStorage.getItem('authToken')) {
+        if (role) {
+          // navigate('/admin/adminpanel');
+          window.location.reload();
+        // } else if (role === 'user') {
+        //   navigate('/user/userdashboard');
+        } else {
+          setError('Invalid role. Please contact support.');
+        }
       } else {
-        setError('Invalid role. Please contact support.');
+        setError('Authentication failed. Please try again.');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-blue-900 p-5">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-4">SK Event and Announcement Hub </h1>
+        <h1 className="text-3xl font-bold text-white mb-4">SK Event and Announcement Hub</h1>
 
         <img
           src={`${process.env.PUBLIC_URL}/logo.jpg`}
@@ -89,10 +102,18 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 rounded-lg font-medium tracking-wide flex items-center justify-center gap-2 hover:bg-teal-600 focus:outline-none focus:ring-4 focus:ring-teal-300 transition-all duration-200"
+              disabled={loading}
+              className={`w-full bg-blue-500 text-white py-2 rounded-lg font-medium tracking-wide flex items-center justify-center gap-2 
+                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-teal-600'} focus:outline-none focus:ring-4 focus:ring-teal-300 transition-all duration-200`}
             >
-              <FaSignInAlt className="text-lg" />
-              Login
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <FaSignInAlt className="text-lg" />
+                  Login
+                </>
+              )}
             </button>
           </form>
         </div>

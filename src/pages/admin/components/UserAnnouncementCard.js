@@ -12,8 +12,8 @@ const UserAnnouncementCard = ({ data }) => {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAnnouncements");
-      console.log(response.data); 
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAnnouncements");
+      // console.log(response.data); 
       const fetchedAnnouncements = response.data.announcements;
      
     } catch (error) {

@@ -26,10 +26,10 @@ const AdminDashboard = () => {
 
   const fetchFeedbackCounts = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getFeedback");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getFeedback");
       setFeedbackCounts({ past: response.data.past || 0 });
     } catch (error) {
-      console.error("Error fetching feedback counts:", error);
+      // console.error("Error fetching feedback counts:", error);
     }
   };
 
@@ -48,27 +48,33 @@ const AdminDashboard = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAllEvents");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAllEvents");
       const eventList = response.data.events;
-
-      console.log(eventList);
-
+  
+      // console.log(eventList);
+  
+      // Get current local time
       const now = new Date();
-
+  
+      // Convert current local time to ISO string without altering the timezone
+      const nowUTC = now.toLocaleString('sv-SE', { timeZoneName: 'short' }).replace(' ', 'T');
+  
       const categorizedEvents = {
-        // upcoming: eventList.filter((event) => new Date(event.startDate) > now),
-        present: eventList.filter(
-          (event) => new Date(event.startDate) <= now && new Date(event.endDate) >= now
-        ),
-        // past: eventList.filter((event) => new Date(event.endDate) < now),
+        present: eventList.filter((event) => {
+          const startDateUTC = new Date(event.startDate).toISOString(); // Convert event start date to UTC string
+          const endDateUTC = new Date(event.endDate).toISOString(); // Convert event end date to UTC string
+  
+          return startDateUTC <= nowUTC && endDateUTC >= nowUTC; // Check if current time is between start and end
+        }),
       };
-
+  
       setPresentEvents(categorizedEvents);
     } catch (error) {
-      console.error("Error fetching events:", error);
-      alert("Failed to fetch events.");
+      // console.error("Error fetching events:", error);
+      // alert("Failed to fetch events.");
     }
   };
+  
 
   useEffect(() => {
     fetchEvents();
@@ -77,39 +83,55 @@ const AdminDashboard = () => {
 
   const fetchEventCountsAndEvents = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAllEvents");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAllEvents");
       const eventList = response.data.events;
-
+  
+      // Get current local time
       const now = new Date();
+  
+      // Convert current local time to ISO string without altering the timezone
+      const nowUTC = now.toLocaleString('sv-SE', { timeZoneName: 'short' }).replace(' ', 'T');
+      // console.log(nowUTC)
       const counts = {
-        upcoming: eventList.filter((event) => new Date(event.startDate) > now).length,
-        ongoing: eventList.filter(
-          (event) => new Date(event.startDate) <= now && new Date(event.endDate) >= now
-        ).length,
-        past: eventList.filter((event) => new Date(event.endDate) < now).length,
+        upcoming: eventList.filter((event) => {
+          const startDateUTC = new Date(event.startDate).toISOString(); // Convert event start date to UTC string
+          return startDateUTC > nowUTC; // Compare event start date with current time in UTC
+        }).length,
+        ongoing: eventList.filter((event) => {
+          const startDateUTC = new Date(event.startDate).toISOString(); // Convert event start date to UTC string
+          const endDateUTC = new Date(event.endDate).toISOString(); // Convert event end date to UTC string
+          // console.log("start ", startDateUTC, "end ", endDateUTC)
+          return startDateUTC <= nowUTC && endDateUTC >= nowUTC; // Check if current time is between start and end
+        }).length,
+        past: eventList.filter((event) => {
+          const endDateUTC = new Date(event.endDate).toISOString(); // Convert event end date to UTC string
+          return endDateUTC < nowUTC; // Compare event end date with current time in UTC
+        }).length,
       };
-
+  
       setEventCounts(counts);
-
+  
+      // Format events with start and end dates in local time
       const formattedEvents = eventList.map((event) => ({
         title: event.eventName,
         start: new Date(event.startDate),
         end: new Date(event.endDate),
       }));
-
+  
       setEvents(formattedEvents);
     } catch (error) {
-      console.error("Error fetching events:", error);
+      // console.error("Error fetching events:", error);
     }
   };
+  
 
  
   const fetchAnnouncements = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAnnouncements");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAnnouncements");
       setAnnouncements(response.data.announcements);
     } catch (error) {
-      console.error("Error fetching announcements:", error);
+      // console.error("Error fetching announcements:", error);
     }
   };
 
@@ -189,7 +211,7 @@ const AdminDashboard = () => {
           <div className="text-xl overflow-y-scroll font-semibold text-gray-800 mb-4 ml-4 text-left">
             <p>Ongoing Events</p>
             
-            {console.log("present", presentEvents[category])}
+            {/* {console.log("present", presentEvents[category])} */}
 
             {presentEvents[category]?.length > 0 ? (
             <div className="flex justify-center text-sm">

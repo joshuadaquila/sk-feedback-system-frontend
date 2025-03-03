@@ -15,7 +15,7 @@ const Announcement = () => {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAnnouncements");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAnnouncements");
       const fetchedAnnouncements = response.data.announcements; // Adjust based on actual API structure
       setAnnouncements(fetchedAnnouncements || []); // Safeguard if data is undefined
     } catch (error) {

@@ -13,7 +13,7 @@ const UserDashboard = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAllEvents");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAllEvents");
       const eventList = response.data.events;
 
       const now = new Date();
@@ -29,7 +29,7 @@ const UserDashboard = () => {
       setEvents(categorizedEvents);
     } catch (error) {
       console.error("Error fetching events:", error);
-      alert("Failed to fetch events.");
+      // alert("Failed to fetch events.");
     }
   };
 

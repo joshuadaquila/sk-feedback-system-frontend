@@ -29,8 +29,8 @@ const GenerateReport = ({ eventId, requestCompleted }) => {
     // Async function inside useEffect to handle the request
     const fetchReport = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/admin/generateReport?eventId=${eventId}`);
-        console.log("RESPONSE2", response)
+        const response = await axios.get(`https://sk-feedback-system-backend.onrender.com/admin/generateReport?eventId=${eventId}`);
+        // console.log("RESPONSE2", response)
         // Extract positive sentiment-related words
         const positiveWords = response.data.data.sentiment_related_words.positive;
 
@@ -48,7 +48,7 @@ const GenerateReport = ({ eventId, requestCompleted }) => {
         const positiveCountLr = overallSentiment.lr.filter(sentiment => sentiment === 'positive').length;
         const negativeCountLr = overallSentiment.lr.filter(sentiment => sentiment === 'negative').length;
         const neutralCountLr = overallSentiment.lr.filter(sentiment => sentiment === 'neutral').length;
-        console.log("total ", totalSentiment)
+        // console.log("total ", totalSentiment)
         
         setPositivePercentage(Number(((positiveCountLr / totalSentiment) * 100).toFixed(2)));
         setNeutralPercentage(Number(((neutralCountLr / totalSentiment) * 100).toFixed(2)));
@@ -65,7 +65,7 @@ const GenerateReport = ({ eventId, requestCompleted }) => {
         const negativeCountlda = overallSentiment.lda.filter(sentiment => sentiment === 1).length;
         const neutralCountlda = overallSentiment.lda.filter(sentiment => sentiment === 2).length;
 
-        console.log("RESPONSE: ", positiveCountLr)
+        // console.log("RESPONSE: ", positiveCountLr)
         if (positiveCountLr > neutralCountLr && positiveCountLr > negativeCountLr) {
           setOverallSentiment('positive');
         } else if (neutralCountLr > positiveCountLr && neutralCountLr > negativeCountLr) {
@@ -127,7 +127,7 @@ const GenerateReport = ({ eventId, requestCompleted }) => {
 
         setRenderReport(true);
       } catch (error) {
-        console.error('Error fetching report:', error);
+        // console.error('Error fetching report:', error);
         setError('Error fetching report. Please try again later.');
       }
     };
@@ -136,15 +136,15 @@ const GenerateReport = ({ eventId, requestCompleted }) => {
   }, [eventId]);
 
   const fetchFeedbacks = async (eventId) => {
-    console.log("Fetching Feedbacks")
+    // console.log("Fetching Feedbacks")
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3001/user/getFeedbackByEvent/${eventId}`);
-      console.log("feedback respnse",response)
+      const response = await axios.get(`https://sk-feedback-system-backend.onrender.com/user/getFeedbackByEvent/${eventId}`);
+      // console.log("feedback respnse",response)
       setFeedbacks(response.data.feedbacks);
     } catch (error) {
-      console.error("Error fetching feedbacks:", error);
-      alert("Failed to load feedbacks.");
+      // console.error("Error fetching feedbacks:", error);
+      // alert("Failed to load feedbacks.");
     } finally {
       setLoading(false);
     }

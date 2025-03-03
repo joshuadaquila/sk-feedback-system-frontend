@@ -43,11 +43,11 @@ const Events = () => {
   const fetchFeedbacks = async (eventId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3001/user/getFeedbackByEvent/${eventId}`);
+      const response = await axios.get(`https://sk-feedback-system-backend.onrender.com/user/getFeedbackByEvent/${eventId}`);
       setFeedbacks(response.data.feedbacks);
     } catch (error) {
       console.error("Error fetching feedbacks:", error);
-      alert("Failed to load feedbacks.");
+      // alert("Failed to load feedbacks.");
     } finally {
       setLoading(false);
     }
@@ -55,27 +55,60 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getAllEvents");
+      const response = await axios.get("https://sk-feedback-system-backend.onrender.com/user/getAllEvents");
       const eventList = response.data.events;
+  
+      // console.log("Event List:", eventList);
+  
+      // Get current local time
+      const now = new Date(); // Local time
+      // console.log("Current Local Time (now):", now);
 
-      console.log(eventList);
+      // Convert current local time to ISO string without altering the timezone
+      const nowUTC = now.toLocaleString('sv-SE', { timeZoneName: 'short' }).replace(' ', 'T');
+      // console.log("Current Local ISOString (nowUTC):", nowUTC);
 
-      const now = new Date();
-
+  
       const categorizedEvents = {
-        upcoming: eventList.filter((event) => new Date(event.startDate) > now),
-        present: eventList.filter(
-          (event) => new Date(event.startDate) <= now && new Date(event.endDate) >= now
-        ),
-        past: eventList.filter((event) => new Date(event.endDate) < now),
+        upcoming: eventList.filter((event) => {
+          const startDateUTC = new Date(event.startDate).toISOString(); // Convert event start date to UTC string
+          // console.log(`Event Start Date (UTC): ${startDateUTC}`);
+  
+          const isUpcoming = startDateUTC > nowUTC; // Compare event start date in UTC with current time in UTC
+          // console.log(`Is event upcoming? ${isUpcoming}`);
+          return isUpcoming;
+        }),
+  
+        present: eventList.filter((event) => {
+          const startDateUTC = new Date(event.startDate).toISOString(); // Convert event start date to UTC string
+          const endDateUTC = new Date(event.endDate).toISOString(); // Convert event end date to UTC string
+  
+          const isPresent = startDateUTC <= nowUTC && endDateUTC >= nowUTC; // Compare start/end dates with current time in UTC
+          
+          return isPresent;
+        }),
+  
+        past: eventList.filter((event) => {
+          const endDateUTC = new Date(event.endDate).toISOString(); // Convert event end date to UTC string
+          
+  
+          const isPast = endDateUTC < nowUTC; // Compare event end date with current time in UTC
+          
+          return isPast;
+        }),
       };
-
+  
       setEvents(categorizedEvents);
     } catch (error) {
       console.error("Error fetching events:", error);
-      alert("Failed to fetch events.");
+      // alert("Failed to fetch events.");
     }
   };
+  
+  
+  console.log(events);
+  
+  
   const [searchQuery, setSearchQuery] = useState("");
 
   const [eventId, setEventId] = useState(null);
@@ -113,7 +146,7 @@ const Events = () => {
     try {
       if (eventDetails.eventId) {
         const response = await axios.post(
-          `http://localhost:3001/user/updateEvent`, // Change POST to PUT
+          `https://sk-feedback-system-backend.onrender.com/user/updateEvent`, // Change POST to PUT
           {
             ...eventDetails,
           }
@@ -132,7 +165,7 @@ const Events = () => {
         }
       } else {
         const response = await axios.post(
-          "http://localhost:3001/user/addEvent",
+          "https://sk-feedback-system-backend.onrender.com/user/addEvent",
           {
             ...eventDetails,
             createdAt: new Date().toISOString(),
@@ -164,7 +197,7 @@ const Events = () => {
       }, 1000);
     } catch (error) {
       console.error("Error saving event:", error);
-      alert(error.message);  // Display the specific error message
+      // alert(error.message);  // Display the specific error message
     }
     
   };
@@ -181,7 +214,7 @@ const Events = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3001/user/deleteEvent/${eventToDelete}`);
+      const response = await axios.delete(`https://sk-feedback-system-backend.onrender.com/user/deleteEvent/${eventToDelete}`);
       
       if (response.status === 200) {
         // Ensure prevEvents is an array before calling filter
@@ -204,11 +237,11 @@ const Events = () => {
       // alert("Event deleted successfully!");
     } catch (error) {
       console.error("Error deleting Event:", error);
-      alert("Failed to delete Event. Please try again.");
+      // alert("Failed to delete Event. Please try again.");
     }
   };
   
-  
+  // console.log(eventDetails)
   const formatDate = (date) => {
     const options = {
       // weekday: 'long', // "Monday"
@@ -218,11 +251,12 @@ const Events = () => {
       hour: 'numeric', // "5"
       minute: 'numeric', // "00"
       hour12: true, // 12-hour format with AM/PM
+      timeZone: 'UTC'
     };
     return new Date(date).toLocaleString('en-US', options);
   }; 
   const handleGenerateReport = (eventId) => {
-    console.log(`Generating report for event ${eventId}`);
+    // console.log(`Generating report for event ${eventId}`);
     setReportId(eventId);
     const sentimentData = {
       positive: 60,
@@ -250,7 +284,7 @@ const Events = () => {
   };
 
   const renderReport = () => {
-    console.log("render report is triggered")
+    // console.log("render report is triggered")
     setReportData(false)
   }
   
