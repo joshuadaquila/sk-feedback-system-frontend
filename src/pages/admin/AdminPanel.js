@@ -42,6 +42,7 @@ const AdminDashboard = () => {
       hour: 'numeric', // "5"
       minute: 'numeric', // "00"
       hour12: true, // 12-hour format with AM/PM
+      timeZone: 'UTC'
     };
     return new Date(date).toLocaleString('en-US', options);
   }; 
