@@ -32,6 +32,7 @@ const Account = () => {
       day: 'numeric', // "3"
       hour: 'numeric', // "5"
       minute: 'numeric', // "00"
+      timeZone: 'UTC',
       hour12: true, // 12-hour format with AM/PM
     };
 
